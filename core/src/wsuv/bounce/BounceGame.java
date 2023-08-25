@@ -50,6 +50,10 @@ public class BounceGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		hud = new HUD(am.get(RSC_MONO_FONT));
 		ball = new Ball(this);
+
+		// the HUD will show FPS always, by default.  Here's how
+		// to use the HUD interface to silence it (and other HUD Data)
+		hud.setDataVisibility(HUDViewCommand.Visibility.WHEN_OPEN);
 	}
 
 	public void update() {
@@ -73,5 +77,6 @@ public class BounceGame extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		am.dispose();
 	}
 }

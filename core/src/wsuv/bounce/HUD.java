@@ -6,16 +6,45 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 
-/**
- * HUD - the HUD allows simple text interaction with the game...
- */
-public class HUD {
-    final static String prompt = "> ";
+
+ /**
+  * A Simple HUD and Command Console.
+  *
+  * The HUD contains a Console that can be opened/closed with the
+  * backtick/tilde key. When the console is open, it receives keystrokes and
+  * acts as a command line interface.  When the console is closed, it ignores
+  * keystrokes. Note that the HUD can interact with your game's input:
+  *  - if your game polls the keyboard using Gdx.input.isKeyPressed() it will
+  *    be able to observe the keyboard state regardless of whether the HUD is open
+  *    or not.  In this case, you most likely want to ignore keypressed data
+  *    when the HUD's isOpen() method returns true.
+  *  - (TODO) if your game relies on key event data (keyTyped events, etc), the HUD will
+  *    probably currently break it ;)
+  *
+  * Two types of Command objects can be registered with the HUD:
+  *  HUDActionCommand instances tell the HUD how to process text entered into the console.
+  *  HUDViewCommand instances tell the HUD how/when to access data for visualization.
+  *
+  * In each case, Command objects are registered with a keyword.
+  *  HUDActionCommand keyword indicates the word that will invoke this command at the console
+  *  HUDViewCommand keyword indicates the text label associated with the data being visualized
+  *
+  *  By default, the HUD has a few ActionCommands registered:
+  *   ? - ask for help at the console prompt
+  *   fps - toggle visibility of the fps data
+  *
+  *  and one ViewCommand:
+  *   FPS - shows current frame rate
+  */
+ public class HUD {
+    final static String PROMPT = "> ";
+    final static int DATA_REFRESH_INTERVAL = 1000;
     private int linesbuffered;
     private int xMargin;
     private int yMargin;
@@ -27,12 +56,15 @@ public class HUD {
     private StringBuilder currentLine;
     private Texture background;
     private HashMap<String, HUDActionCommand> knownCommands;
+    private HashMap<String, HUDViewCommand> hudData;
+    private long lastDataRefresh;
+    private StringBuilder hudDataBuffer;
 
     private InputAdapter inputAdapter = new InputAdapter() {
         public boolean keyTyped(char character) {
             String cmd, result;
             if (character == '`') {
-                open = !open;
+                toggleConsole();
                 return true;
             }
             if (open) {
@@ -42,7 +74,7 @@ public class HUD {
                     String[] words = cmd.split("[ \t]+");
                     HUDActionCommand callback = knownCommands.get(words[0]);
                     result = (callback == null) ? "?":callback.execute(words);
-                    consoleLines.add(prompt + cmd);
+                    consoleLines.add(PROMPT + cmd);
                     for( String line : result.split("[\n]+")) {
                         consoleLines.add(line);
                     }
@@ -60,11 +92,12 @@ public class HUD {
             return false;
         }
     };
-            /**
-             * Make a HUD with sane defaults.
-             */
+
+    /**
+     * Make a HUD with sane defaults.
+     */
     public HUD(BitmapFont fnt) {
-        this(10, 13, 10, 5, fnt);
+        this(10, 13, 10, 500, fnt);
     }
 
     /**
@@ -85,6 +118,8 @@ public class HUD {
         currentLine = new StringBuilder(60);
         consoleLines = new ArrayDeque<String>();
         knownCommands = new HashMap<>(10);
+        hudData = new HashMap<>(10);
+        hudDataBuffer = new StringBuilder(20);
 
         font = fnt;
         lineHeight = font.getLineHeight();
@@ -97,16 +132,17 @@ public class HUD {
         pixmap.dispose();
 
         // register built-in action commands...
-        knownCommands.put("fps", new HUDActionCommand() {
+        registerAction("fps", new HUDActionCommand() {
             @Override
             public String execute(String[] cmd) {
-                return "fps is " + Gdx.graphics.getFramesPerSecond();
+                HUDViewCommand.Visibility v = hudData.get("FPS:").nextVisiblityState();
+                return "fps visibility: " + v;
             }
             public String help(String[] cmd) {
-                return "show fps";
+                return "toggle fps visibility always <-> in console";
             }
         });
-        knownCommands.put("?", new HUDActionCommand() {
+        registerAction("?", new HUDActionCommand() {
             @Override
             public String execute(String[] cmd) {
 
@@ -126,27 +162,124 @@ public class HUD {
         });
 
 
+        // register build-in view commands...
+        registerView("FPS:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
+            @Override
+            public String execute(Visibility visibilityContext) {
+                return Integer.toString(Gdx.graphics.getFramesPerSecond());
+            }
+        });
+
+        lastDataRefresh = TimeUtils.millis() - DATA_REFRESH_INTERVAL;
         System.out.println("Creating HUD..."+ Gdx.input.getInputProcessor());
         Gdx.input.setInputProcessor(inputAdapter);
     }
 
+    /**
+     *
+     * @return true iff the HUD console is open (and accepting input)
+     */
     public boolean isOpen() { return open; }
 
+    /**
+     * This method should be called to render the HUD the specified batch
+     * should have previously been opened (and not yet closed). Generally,
+     * you'll want to call this method after all other items on the screen
+     * have been drawn.
+     *
+     * @param batch an open Batch in which to do the rendering
+     */
     public void draw(Batch batch) {
         String console = "";
+        HUDViewCommand.Visibility desiredvisibility;
         int xlocation;
+
+        if (open) {
+            xlocation = rColumn;
+            desiredvisibility = HUDViewCommand.Visibility.WHEN_OPEN;
+        }
+        else {
+            xlocation = xMargin;
+            desiredvisibility = HUDViewCommand.Visibility.ALWAYS;
+        }
 
         // draw based on the open/closed status
         if (open) {
             batch.draw(background, 0, Gdx.graphics.getHeight() - ((font.getLineHeight())*linesbuffered) - yMargin);
             console = String.join("\n", consoleLines);
             if (console.equals("")) {
-                console = prompt + currentLine.toString();
+                console = PROMPT + currentLine.toString();
 
             } else {
-                console = console + '\n' + prompt + currentLine.toString();
+                console = console + '\n' + PROMPT + currentLine.toString();
             }
             font.draw(batch, console, xMargin, Gdx.graphics.getHeight() - yMargin);
         }
+        // refresh HUD Data every second....
+        if (TimeUtils.millis() - lastDataRefresh > DATA_REFRESH_INTERVAL) {
+            lastDataRefresh = TimeUtils.millis();
+            hudDataBuffer.setLength(0); // reset, since we're about to rewrite the data
+
+            for(String k : hudData.keySet()) {
+                HUDViewCommand vc = hudData.get(k);
+                if (vc.vis == desiredvisibility) {
+                    hudDataBuffer.append(k);
+                    hudDataBuffer.append(' ');
+                    hudDataBuffer.append(vc.execute(desiredvisibility));
+                    hudDataBuffer.append('\n');
+                }
+            }
+        }
+        // draw HUD Data every frame...
+        font.draw(batch, hudDataBuffer.toString(), xlocation, Gdx.graphics.getHeight() - yMargin);
     }
+
+    /**
+     * Register a new command executed from the HUD Console
+     * @param cmd - name (1 word) of command
+     * @param cmdcallback - The HUDActionCommand to execute
+     * @return true if registration succeeds
+     */
+    public boolean registerAction(String cmd, HUDActionCommand cmdcallback) {
+        if (knownCommands.containsKey(cmd)) {
+            return false;
+        }
+        knownCommands.put(cmd, cmdcallback);
+        return true;
+    }
+
+    /**
+     * Register a new visual item in the HUD (something you can see)
+     * @param key - text label/name
+     * @param viewcallback - The HUDViewCommand executed to obtain the visual
+     * @return true if registration succeeds
+     */
+    public boolean registerView(String key, HUDViewCommand viewcallback) {
+        if (hudData.containsKey(key)) {
+            return false;
+        }
+        hudData.put(key, viewcallback);
+        return true;
+    }
+
+    /**
+     * Toggle the console open/closed and force HUDData to refresh
+     * @return true iff console is open
+     */
+    public boolean toggleConsole() {
+        open = !open;
+        hudDataBuffer.setLength(0);
+        lastDataRefresh -= DATA_REFRESH_INTERVAL;
+        return open;
+    }
+
+    /**
+     * For all registered HUDViewCommands, set the visibility as specifed
+     */
+    public void setDataVisibility(HUDViewCommand.Visibility v) {
+        for(HUDViewCommand c : hudData.values()) {
+            c.vis = v;
+        }
+    }
+
 }
