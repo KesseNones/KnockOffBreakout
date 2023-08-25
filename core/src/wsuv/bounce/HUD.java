@@ -44,7 +44,7 @@ import java.util.HashMap;
   */
  public class HUD {
     final static String PROMPT = "> ";
-    final static int DATA_REFRESH_INTERVAL = 1000;
+    final static int DATA_REFRESH_INTERVAL = 100; // 100ms
     private int linesbuffered;
     private int xMargin;
     private int yMargin;
@@ -163,9 +163,9 @@ import java.util.HashMap;
 
 
         // register build-in view commands...
-        registerView("FPS:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
+        registerView("FPS:", new HUDViewCommand(HUDViewCommand.Visibility.WHEN_CLOSED) {
             @Override
-            public String execute(Visibility visibilityContext) {
+            public String execute(boolean consoleIsOpen) {
                 return Integer.toString(Gdx.graphics.getFramesPerSecond());
             }
         });
@@ -196,11 +196,8 @@ import java.util.HashMap;
 
         if (open) {
             xlocation = rColumn;
-            desiredvisibility = HUDViewCommand.Visibility.WHEN_OPEN;
-        }
-        else {
+        } else {
             xlocation = xMargin;
-            desiredvisibility = HUDViewCommand.Visibility.ALWAYS;
         }
 
         // draw based on the open/closed status
@@ -222,10 +219,10 @@ import java.util.HashMap;
 
             for(String k : hudData.keySet()) {
                 HUDViewCommand vc = hudData.get(k);
-                if (vc.vis == desiredvisibility) {
+                if (vc.isVisible(open)) {
                     hudDataBuffer.append(k);
                     hudDataBuffer.append(' ');
-                    hudDataBuffer.append(vc.execute(desiredvisibility));
+                    hudDataBuffer.append(vc.execute(open));
                     hudDataBuffer.append('\n');
                 }
             }

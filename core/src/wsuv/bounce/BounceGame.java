@@ -25,6 +25,7 @@ public class BounceGame extends ApplicationAdapter {
 	Random random = new Random();
 
 	Ball ball;
+	int bounces;
 
 	HUD hud;
 	@Override
@@ -50,14 +51,24 @@ public class BounceGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		hud = new HUD(am.get(RSC_MONO_FONT));
 		ball = new Ball(this);
-
+		bounces = 0;
 		// the HUD will show FPS always, by default.  Here's how
 		// to use the HUD interface to silence it (and other HUD Data)
 		hud.setDataVisibility(HUDViewCommand.Visibility.WHEN_OPEN);
+		hud.registerView("Bounces:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
+			@Override
+			public String execute(boolean consoleIsOpen) {
+				return Integer.toString(bounces);
+			}
+		});
+
 	}
 
 	public void update() {
-		ball.update();
+		if( ball.update() ) {
+			// it bounced!
+			bounces++;
+		}
 	}
 
 	@Override

@@ -1,18 +1,12 @@
 package wsuv.bounce;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import java.util.Random;
 
 public class Ball extends Sprite {
 
-    private static final Random random = new Random();
-    private Sound sound;
     private float xVelocity;
     private float yVelocity;
 
@@ -26,6 +20,12 @@ public class Ball extends Sprite {
         setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
     }
 
+    /**
+     * Update the ball's location based on time since last update and velocity.
+     * update() should generally be called every frame...
+     *
+     * @return true iff the ball bounced in this last update.
+     */
     public boolean update() {
         float x = getX();
         float y = getY();
