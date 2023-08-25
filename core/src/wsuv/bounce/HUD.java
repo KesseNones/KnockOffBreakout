@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
 
 /**
  * HUD - the HUD allows simple text interaction with the game...
@@ -25,20 +26,26 @@ public class HUD {
     private Deque<String> consoleLines;
     private StringBuilder currentLine;
     private Texture background;
+    private HashMap<String, HUDActionCommand> knownCommands;
 
     private InputAdapter inputAdapter = new InputAdapter() {
         public boolean keyTyped(char character) {
-            String cmd;
+            String cmd, result;
             if (character == '`') {
                 open = !open;
                 return true;
             }
             if (open) {
                 if (character == '\n') {
+                    // when the line is ended, see if a valid command was issued...
                     cmd = currentLine.toString();
                     String[] words = cmd.split("[ \t]+");
-                    // todo... callback.
+                    HUDActionCommand callback = knownCommands.get(words[0]);
+                    result = (callback == null) ? "?":callback.execute(words);
                     consoleLines.add(prompt + cmd);
+                    for( String line : result.split("[\n]+")) {
+                        consoleLines.add(line);
+                    }
                     while (consoleLines.size() >= linesbuffered) {
                         consoleLines.removeFirst();
                     }
@@ -77,6 +84,7 @@ public class HUD {
         rColumn = rcol;
         currentLine = new StringBuilder(60);
         consoleLines = new ArrayDeque<String>();
+        knownCommands = new HashMap<>(10);
 
         font = fnt;
         lineHeight = font.getLineHeight();
@@ -87,6 +95,36 @@ public class HUD {
         pixmap.fill();
         background = new Texture(pixmap);
         pixmap.dispose();
+
+        // register built-in action commands...
+        knownCommands.put("fps", new HUDActionCommand() {
+            @Override
+            public String execute(String[] cmd) {
+                return "fps is " + Gdx.graphics.getFramesPerSecond();
+            }
+            public String help(String[] cmd) {
+                return "show fps";
+            }
+        });
+        knownCommands.put("?", new HUDActionCommand() {
+            @Override
+            public String execute(String[] cmd) {
+
+                StringBuilder sb = new StringBuilder(100);
+                sb.append("Known Commands:\n");
+                for (String k : knownCommands.keySet()) {
+                    sb.append(k);
+                    sb.append(" - ");
+                    sb.append(knownCommands.get(k).help(null));
+                    sb.append('\n');
+                }
+                return sb.toString();
+            }
+            public String help(String[] cmd) {
+                return "list all commands";
+            }
+        });
+
 
         System.out.println("Creating HUD..."+ Gdx.input.getInputProcessor());
         Gdx.input.setInputProcessor(inputAdapter);
