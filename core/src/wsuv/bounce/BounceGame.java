@@ -1,6 +1,8 @@
 package wsuv.bounce;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -69,6 +71,22 @@ public class BounceGame extends ApplicationAdapter {
 			// it bounced!
 			bounces++;
 		}
+		// ignore key presses when console is open...
+		if (!hud.isOpen()) {
+			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+				ball.yVelocity += 2;
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+				ball.yVelocity -= 2;
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+				ball.xVelocity -= 2;
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+				ball.xVelocity += 2;
+			}
+		}
+
 	}
 
 	@Override

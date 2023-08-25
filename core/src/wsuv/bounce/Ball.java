@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Ball extends Sprite {
 
-    private float xVelocity;
-    private float yVelocity;
+    float xVelocity;
+    float yVelocity;
 
     public Ball(BounceGame game) {
         super(game.am.get("ball.png", Texture.class));
