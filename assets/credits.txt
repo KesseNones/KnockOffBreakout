@@ -2,3 +2,8 @@
   Ball Image (ball.png)
   https://kenney.nl/assets/planets
   CC0
+
+  JetBrains
+  JetBrainsMono*.ttf fonts
+  https://www.jetbrains.com/lp/mono/
+  free/opensource no credit required
