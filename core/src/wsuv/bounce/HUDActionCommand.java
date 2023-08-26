@@ -8,6 +8,7 @@ package wsuv.bounce;
 public interface HUDActionCommand {
     /**
      * Perform the command
+     *
      * @param - cmd the command line used to invoke this command
      * @return - a String of user feedback
      */
@@ -15,8 +16,11 @@ public interface HUDActionCommand {
 
     /**
      * (Optionally) help for this command line function
+     *
      * @param cmd - the command line used to invoke help
      * @return - A help string
      */
-    default String help(String[] cmd) { return "?";}
+    default String help(String[] cmd) {
+        return "?";
+    }
 }

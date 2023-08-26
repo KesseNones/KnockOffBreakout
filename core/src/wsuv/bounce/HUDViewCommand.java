@@ -12,9 +12,11 @@ public abstract class HUDViewCommand {
     public HUDViewCommand() {
         vis = Visibility.WHEN_OPEN;
     }
+
     public HUDViewCommand(Visibility desiredVisiblity) {
         vis = desiredVisiblity;
     }
+
     public abstract String execute(boolean consoleIsOpen);
 
     public Visibility nextVisiblityState() {
@@ -22,6 +24,7 @@ public abstract class HUDViewCommand {
         else if (vis == Visibility.WHEN_OPEN) vis = Visibility.WHEN_CLOSED;
         return vis;
     }
+
     public boolean isVisible(boolean consoleIsOpen) {
         if (consoleIsOpen) return (vis != Visibility.WHEN_CLOSED);
         else return (vis != Visibility.WHEN_OPEN);
