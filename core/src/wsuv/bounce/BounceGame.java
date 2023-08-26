@@ -1,6 +1,8 @@
 package wsuv.bounce;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -48,6 +50,17 @@ public class BounceGame extends Game {
 
         batch = new SpriteBatch();
         setScreen(new LoadScreen(this));
+
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyTyped(char character) {
+                if (character == '!') {
+                    System.out.println("Boom!");
+                    return true;
+                }
+                return false;
+            }
+        });
 
     }
 

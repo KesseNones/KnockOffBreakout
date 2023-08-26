@@ -6,6 +6,10 @@
 - **[4]** Keyboard controls for ball
 - **[7]** Add console command to control ball's location/velocity
 - **[5]** Add loading screen to get rid of glitchyness at start
+- **[6]** Add inputAdapter to game and ensure HUD is compatible
 
 ## Open Issues ##
-- **[6]** Add inputAdapter to game and ensure HUD is compatible
+- **[8]** Add explosion animation
+- **[9]** Add ball tracking HUD item
+- **[10]** Add sounds and music
+

@@ -2,6 +2,8 @@ package wsuv.bounce;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -19,13 +21,19 @@ import java.util.HashMap;
  * The HUD contains a Console that can be opened/closed with the
  * backtick/tilde key. When the console is open, it receives keystrokes and
  * acts as a command line interface.  When the console is closed, it ignores
- * keystrokes. Note that the HUD can interact with your game's input:
+ * keystrokes.
+ *
+ * WARNING: the HUD can interact with your game's input:
+ *
  * - if your game polls the keyboard using Gdx.input.isKeyPressed() it will
  * be able to observe the keyboard state regardless of whether the HUD is open
  * or not.  In this case, you most likely want to ignore keypressed data
  * when the HUD's isOpen() method returns true.
- * - (TODO) if your game relies on key event data (keyTyped events, etc), the HUD will
- * probably currently break it ;)
+ * - if your game relies on key event data (keyTyped events, etc),
+ * you need to be aware that the HUD registers a global InputAdapter
+ * (via Gdx.input.setInputAdapter()) upon creation. You must either: (1)
+ * register your own input adapter prior to creating the HUD; or (2) take
+ * care of multiplexing on your own.
  *
  * Two types of Command objects can be registered with the HUD:
  * HUDActionCommand instances tell the HUD how to process text entered into the console.
@@ -172,8 +180,20 @@ public class HUD {
         });
 
         lastDataRefresh = TimeUtils.millis() - DATA_REFRESH_INTERVAL;
-        System.out.println("Creating HUD..." + Gdx.input.getInputProcessor());
-        Gdx.input.setInputProcessor(inputAdapter);
+        if (Gdx.input.getInputProcessor() != null) {
+            Gdx.app.log("HUD", "InputProcessor detected...installing multiplexer (see HUD docs if you have problems)");
+            // if there's already an input processor,
+            // create a multiplexer that runs input first through the hud's input adapter
+            // then through the old one...
+            InputProcessor old = Gdx.input.getInputProcessor();
+            InputMultiplexer multiplexer = new InputMultiplexer();
+            multiplexer.addProcessor(inputAdapter);
+            multiplexer.addProcessor(old);
+            Gdx.input.setInputProcessor(multiplexer);
+        } else {
+            Gdx.app.log("HUD", "No InputProcessor detected...initializing; (see HUD docs if you call setInputProcessor() later)");
+            Gdx.input.setInputProcessor(inputAdapter);
+        }
     }
 
     /**
