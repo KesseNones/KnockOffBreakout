@@ -13,36 +13,36 @@ import java.util.Deque;
 import java.util.HashMap;
 
 
- /**
-  * A Simple HUD and Command Console.
-  *
-  * The HUD contains a Console that can be opened/closed with the
-  * backtick/tilde key. When the console is open, it receives keystrokes and
-  * acts as a command line interface.  When the console is closed, it ignores
-  * keystrokes. Note that the HUD can interact with your game's input:
-  *  - if your game polls the keyboard using Gdx.input.isKeyPressed() it will
-  *    be able to observe the keyboard state regardless of whether the HUD is open
-  *    or not.  In this case, you most likely want to ignore keypressed data
-  *    when the HUD's isOpen() method returns true.
-  *  - (TODO) if your game relies on key event data (keyTyped events, etc), the HUD will
-  *    probably currently break it ;)
-  *
-  * Two types of Command objects can be registered with the HUD:
-  *  HUDActionCommand instances tell the HUD how to process text entered into the console.
-  *  HUDViewCommand instances tell the HUD how/when to access data for visualization.
-  *
-  * In each case, Command objects are registered with a keyword.
-  *  HUDActionCommand keyword indicates the word that will invoke this command at the console
-  *  HUDViewCommand keyword indicates the text label associated with the data being visualized
-  *
-  *  By default, the HUD has a few ActionCommands registered:
-  *   ? - ask for help at the console prompt
-  *   fps - toggle visibility of the fps data
-  *
-  *  and one ViewCommand:
-  *   FPS - shows current frame rate
-  */
- public class HUD {
+/**
+ * A Simple HUD and Command Console.
+ *
+ * The HUD contains a Console that can be opened/closed with the
+ * backtick/tilde key. When the console is open, it receives keystrokes and
+ * acts as a command line interface.  When the console is closed, it ignores
+ * keystrokes. Note that the HUD can interact with your game's input:
+ * - if your game polls the keyboard using Gdx.input.isKeyPressed() it will
+ * be able to observe the keyboard state regardless of whether the HUD is open
+ * or not.  In this case, you most likely want to ignore keypressed data
+ * when the HUD's isOpen() method returns true.
+ * - (TODO) if your game relies on key event data (keyTyped events, etc), the HUD will
+ * probably currently break it ;)
+ *
+ * Two types of Command objects can be registered with the HUD:
+ * HUDActionCommand instances tell the HUD how to process text entered into the console.
+ * HUDViewCommand instances tell the HUD how/when to access data for visualization.
+ *
+ * In each case, Command objects are registered with a keyword.
+ * HUDActionCommand keyword indicates the word that will invoke this command at the console
+ * HUDViewCommand keyword indicates the text label associated with the data being visualized
+ *
+ * By default, the HUD has a few ActionCommands registered:
+ * ? - ask for help at the console prompt
+ * fps - toggle visibility of the fps data
+ *
+ * and one ViewCommand:
+ * FPS - shows current frame rate
+ */
+public class HUD {
     final static String PROMPT = "> ";
     final static int DATA_REFRESH_INTERVAL = 100; // 100ms
     private int linesbuffered;
@@ -73,9 +73,9 @@ import java.util.HashMap;
                     cmd = currentLine.toString();
                     String[] words = cmd.split("[ \t]+");
                     HUDActionCommand callback = knownCommands.get(words[0]);
-                    result = (callback == null) ? "?":callback.execute(words);
+                    result = (callback == null) ? "?" : callback.execute(words);
                     consoleLines.add(PROMPT + cmd);
-                    for( String line : result.split("[\n]+")) {
+                    for(String line : result.split("[\n]+")) {
                         consoleLines.add(line);
                     }
                     while (consoleLines.size() >= linesbuffered) {
@@ -103,11 +103,11 @@ import java.util.HashMap;
     /**
      * Make a HUD
      *
-     * @param linesbuffd  - number of lines of data buffered
-     * @param xmargin     - xmargin from left of window (in pixels)
-     * @param ymargin     - ymargin from top of window (in pixels)
-     * @param rcol        - the location of the right column (in pixels) where
-     *                      hud data is shown when the console is open.
+     * @param linesbuffd - number of lines of data buffered
+     * @param xmargin    - xmargin from left of window (in pixels)
+     * @param ymargin    - ymargin from top of window (in pixels)
+     * @param rcol       - the location of the right column (in pixels) where
+     *                   hud data is shown when the console is open.
      * @param fnt        - the font to use for display
      */
     public HUD(int linesbuffd, int xmargin, int ymargin, int rcol, BitmapFont fnt) {
@@ -138,6 +138,7 @@ import java.util.HashMap;
                 HUDViewCommand.Visibility v = hudData.get("FPS:").nextVisiblityState();
                 return "fps visibility: " + v;
             }
+
             public String help(String[] cmd) {
                 return "toggle fps visibility always <-> in console";
             }
@@ -148,7 +149,7 @@ import java.util.HashMap;
 
                 StringBuilder sb = new StringBuilder(100);
                 sb.append("Known Commands:\n");
-                for (String k : knownCommands.keySet()) {
+                for(String k : knownCommands.keySet()) {
                     sb.append(k);
                     sb.append(" - ");
                     sb.append(knownCommands.get(k).help(null));
@@ -156,11 +157,11 @@ import java.util.HashMap;
                 }
                 return sb.toString();
             }
+
             public String help(String[] cmd) {
                 return "list all commands";
             }
         });
-
 
         // register build-in view commands...
         registerView("FPS:", new HUDViewCommand(HUDViewCommand.Visibility.WHEN_CLOSED) {
@@ -171,15 +172,16 @@ import java.util.HashMap;
         });
 
         lastDataRefresh = TimeUtils.millis() - DATA_REFRESH_INTERVAL;
-        System.out.println("Creating HUD..."+ Gdx.input.getInputProcessor());
+        System.out.println("Creating HUD..." + Gdx.input.getInputProcessor());
         Gdx.input.setInputProcessor(inputAdapter);
     }
 
     /**
-     *
      * @return true iff the HUD console is open (and accepting input)
      */
-    public boolean isOpen() { return open; }
+    public boolean isOpen() {
+        return open;
+    }
 
     /**
      * This method should be called to render the HUD the specified batch
@@ -202,7 +204,7 @@ import java.util.HashMap;
 
         // draw based on the open/closed status
         if (open) {
-            batch.draw(background, 0, Gdx.graphics.getHeight() - ((font.getLineHeight())*linesbuffered) - yMargin);
+            batch.draw(background, 0, Gdx.graphics.getHeight() - ((font.getLineHeight()) * linesbuffered) - yMargin);
             console = String.join("\n", consoleLines);
             if (console.equals("")) {
                 console = PROMPT + currentLine.toString();
@@ -233,7 +235,8 @@ import java.util.HashMap;
 
     /**
      * Register a new command executed from the HUD Console
-     * @param cmd - name (1 word) of command
+     *
+     * @param cmd         - name (1 word) of command
      * @param cmdcallback - The HUDActionCommand to execute
      * @return true if registration succeeds
      */
@@ -247,7 +250,8 @@ import java.util.HashMap;
 
     /**
      * Register a new visual item in the HUD (something you can see)
-     * @param key - text label/name
+     *
+     * @param key          - text label/name
      * @param viewcallback - The HUDViewCommand executed to obtain the visual
      * @return true if registration succeeds
      */
@@ -261,6 +265,7 @@ import java.util.HashMap;
 
     /**
      * Toggle the console open/closed and force HUDData to refresh
+     *
      * @return true iff console is open
      */
     public boolean toggleConsole() {
@@ -278,5 +283,4 @@ import java.util.HashMap;
             c.vis = v;
         }
     }
-
 }

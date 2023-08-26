@@ -17,7 +17,7 @@ public class Ball extends Sprite {
         yVelocity = game.random.nextFloat(80, 150);
         if (game.random.nextBoolean()) xVelocity *= -1;
         if (game.random.nextBoolean()) yVelocity *= -1;
-        setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+        setCenter(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     }
 
     /**
@@ -40,8 +40,8 @@ public class Ball extends Sprite {
             bounced = true;
         }
         float time = Gdx.graphics.getDeltaTime();
-        setX(x + time*xVelocity);
-        setY(y + time*yVelocity);
+        setX(x + time * xVelocity);
+        setY(y + time * yVelocity);
 
         return bounced;
     }
