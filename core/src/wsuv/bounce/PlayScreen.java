@@ -1,8 +1,6 @@
 package wsuv.bounce;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -10,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PlayScreen extends ScreenAdapter {
-    private enum SubState {READY, GAME_OVER, PLAYING};
+    private enum SubState {READY, GAME_OVER, PLAYING}
     private Ball ball;
     private BounceGame bounceGame;
     private HUD hud;
@@ -23,7 +21,7 @@ public class PlayScreen extends ScreenAdapter {
     public PlayScreen(BounceGame game) {
         timer = 0;
         bounceGame = game;
-        hud = new HUD(bounceGame.am.get(bounceGame.RSC_MONO_FONT));
+        hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
         bounces = 0;
         explosions = new ArrayList<>(10);
@@ -64,6 +62,27 @@ public class PlayScreen extends ScreenAdapter {
                 return Integer.toString(bounces);
             }
         });
+
+        // we're adding an input processor AFTER the HUD has been created,
+        // so we need to be a bit careful here and make sure not to clobber
+        // the HUD's input controls. Do that by using an InputMultiplexer
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        // let the HUD's input processor handle things first....
+        multiplexer.addProcessor(Gdx.input.getInputProcessor());
+        // then pass input to our new handler...
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean keyTyped(char character) {
+                if (character == '!') {
+                    System.out.println("Boom! (" + explosions.size() + ")" );
+                    explosions.add(new Bang(bounceGame, false, ball.getX(), ball.getY()));
+                    return true;
+                }
+                return false;
+            }
+        });
+        Gdx.input.setInputProcessor(multiplexer);
+
     }
 
     @Override
@@ -79,7 +98,8 @@ public class PlayScreen extends ScreenAdapter {
         // always update the ball, but ignore bounces unless we're in PLAY state
         if (ball.update() && state == SubState.PLAYING) {
             bounces++;
-            explosions.add(new Bang(bounceGame, ball.getX(), ball.getY()));
+            // fast explosions off walls
+            explosions.add(new Bang(bounceGame, true, ball.getX(), ball.getY()));
 
             if (bounces == 5) {
                 state = SubState.GAME_OVER;
@@ -125,10 +145,10 @@ public class PlayScreen extends ScreenAdapter {
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
             case GAME_OVER:
-                bounceGame.batch.draw(bounceGame.am.get(bounceGame.RSC_GAMEOVER_IMG, Texture.class), 200, 200);
+                bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_GAMEOVER_IMG, Texture.class), 200, 200);
                 break;
             case READY:
-                bounceGame.batch.draw(bounceGame.am.get(bounceGame.RSC_PRESSAKEY_IMG, Texture.class), 200, 200);
+                bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_PRESSAKEY_IMG, Texture.class), 200, 200);
                 break;
             case PLAYING:
                 break;

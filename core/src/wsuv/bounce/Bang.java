@@ -4,16 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 
+/**
+ * An Explosion!
+ */
 public class Bang {
     float x, y;
     float time;
     Animation<TextureRegion> animation; // Must declare frame type (TextureRegion)
 
-    public Bang(BounceGame game) {
-        this(game, 100, 100);
+    public Bang(BounceGame game, boolean fast) {
+        this(game, fast, 100, 100);
     }
 
-    public Bang(BounceGame game, float x, float y) {
+    public Bang(BounceGame game, boolean fast, float x, float y) {
         this.x = x;
         this.y = y;
         time = 0;
@@ -33,10 +36,7 @@ public class Bang {
                 frames[index++] = tmp[i][j];
             }
         }
-        animation = new Animation<TextureRegion>(0.025f, frames);
-
-
-
+        animation = new Animation<TextureRegion>(fast ? 0.03f : .07f, frames);
     }
     public void draw(Batch sb) {
         time += Gdx.graphics.getDeltaTime();

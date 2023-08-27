@@ -55,17 +55,6 @@ public class BounceGame extends Game {
         batch = new SpriteBatch();
         setScreen(new LoadScreen(this));
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyTyped(char character) {
-                if (character == '!') {
-                    System.out.println("Boom!");
-                    return true;
-                }
-                return false;
-            }
-        });
-
     }
 
     @Override
