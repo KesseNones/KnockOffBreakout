@@ -1,6 +1,7 @@
 package wsuv.bounce;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -16,6 +17,7 @@ public class PlayScreen extends ScreenAdapter {
     private int bounces;
     private float timer;
 
+    private Sound boomSfx;
     private ArrayList<Bang> explosions;
 
     public PlayScreen(BounceGame game) {
@@ -25,6 +27,7 @@ public class PlayScreen extends ScreenAdapter {
         ball = new Ball(game);
         bounces = 0;
         explosions = new ArrayList<>(10);
+        boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
 
         // the HUD will show FPS always, by default.  Here's how
         // to use the HUD interface to silence it (and other HUD Data)
@@ -83,6 +86,7 @@ public class PlayScreen extends ScreenAdapter {
                 if (character == '!') {
                     System.out.println("Boom! (" + explosions.size() + ")" );
                     explosions.add(new Bang(false, ball.getX(), ball.getY()));
+                    boomSfx.play();
                     return true;
                 }
                 return false;
@@ -97,7 +101,6 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.app.log("PlayScreen", "show");
         state = SubState.READY;
         bounces = 0;
-
     }
 
     public void update(float delta) {
@@ -107,6 +110,7 @@ public class PlayScreen extends ScreenAdapter {
             bounces++;
             // fast explosions off walls
             explosions.add(new Bang(true, ball.getX(), ball.getY()));
+            boomSfx.play();
 
             if (bounces == 5) {
                 state = SubState.GAME_OVER;
