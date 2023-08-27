@@ -62,6 +62,13 @@ public class PlayScreen extends ScreenAdapter {
                 return Integer.toString(bounces);
             }
         });
+        hud.registerView("Ball @:", new HUDViewCommand(HUDViewCommand.Visibility.WHEN_OPEN) {
+            @Override
+            public String execute(boolean consoleIsOpen) {
+                return String.format("%.0f %.0f [%.0f %.0f] (%d)",
+                        ball.getX(), ball.getY(), ball.xVelocity, ball.yVelocity, explosions.size());
+            }
+        });
 
         // we're adding an input processor AFTER the HUD has been created,
         // so we need to be a bit careful here and make sure not to clobber
