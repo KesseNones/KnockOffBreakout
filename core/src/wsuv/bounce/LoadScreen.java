@@ -5,7 +5,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class LoadScreen extends ScreenAdapter {
     BounceGame bounceGame;
@@ -41,8 +40,8 @@ public class LoadScreen extends ScreenAdapter {
         // this happens in another thread
         bounceGame.am.update(10);
 
-        if (font == null && bounceGame.am.isLoaded(bounceGame.RSC_MONO_FONT)) {
-            font = bounceGame.am.get(bounceGame.RSC_MONO_FONT);
+        if (font == null && bounceGame.am.isLoaded(BounceGame.RSC_MONO_FONT)) {
+            font = bounceGame.am.get(BounceGame.RSC_MONO_FONT);
         } else if ((credits_offset >= credits.length) && bounceGame.am.isFinished()) {
             bounceGame.setScreen(new PlayScreen(bounceGame));
         } else if (font != null) {

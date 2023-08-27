@@ -75,7 +75,7 @@ public class PlayScreen extends ScreenAdapter {
             public boolean keyTyped(char character) {
                 if (character == '!') {
                     System.out.println("Boom! (" + explosions.size() + ")" );
-                    explosions.add(new Bang(bounceGame, false, ball.getX(), ball.getY()));
+                    explosions.add(new Bang(false, ball.getX(), ball.getY()));
                     return true;
                 }
                 return false;
@@ -99,7 +99,7 @@ public class PlayScreen extends ScreenAdapter {
         if (ball.update() && state == SubState.PLAYING) {
             bounces++;
             // fast explosions off walls
-            explosions.add(new Bang(bounceGame, true, ball.getX(), ball.getY()));
+            explosions.add(new Bang(true, ball.getX(), ball.getY()));
 
             if (bounces == 5) {
                 state = SubState.GAME_OVER;

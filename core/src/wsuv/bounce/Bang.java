@@ -12,11 +12,7 @@ public class Bang {
     float time;
     Animation<TextureRegion> animation; // Must declare frame type (TextureRegion)
 
-    public Bang(BounceGame game, boolean fast) {
-        this(game, fast, 100, 100);
-    }
-
-    public Bang(BounceGame game, boolean fast, float x, float y) {
+    public Bang(boolean fast, float x, float y) {
         this.x = x;
         this.y = y;
         time = 0;
