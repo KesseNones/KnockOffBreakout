@@ -6,6 +6,9 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class PlayScreen extends ScreenAdapter {
     private enum SubState {READY, GAME_OVER, PLAYING};
     private Ball ball;
@@ -15,12 +18,15 @@ public class PlayScreen extends ScreenAdapter {
     private int bounces;
     private float timer;
 
+    private ArrayList<Bang> explosions;
+
     public PlayScreen(BounceGame game) {
         timer = 0;
         bounceGame = game;
         hud = new HUD(bounceGame.am.get(bounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
         bounces = 0;
+        explosions = new ArrayList<>(10);
 
         // the HUD will show FPS always, by default.  Here's how
         // to use the HUD interface to silence it (and other HUD Data)
@@ -73,6 +79,8 @@ public class PlayScreen extends ScreenAdapter {
         // always update the ball, but ignore bounces unless we're in PLAY state
         if (ball.update() && state == SubState.PLAYING) {
             bounces++;
+            explosions.add(new Bang(bounceGame, ball.getX(), ball.getY()));
+
             if (bounces == 5) {
                 state = SubState.GAME_OVER;
                 timer = 0; // restart the timer.
@@ -108,6 +116,11 @@ public class PlayScreen extends ScreenAdapter {
 
         ScreenUtils.clear(0, 0, 0, 1);
         bounceGame.batch.begin();
+        for(Iterator<Bang> bi = explosions.iterator(); bi.hasNext(); ) {
+            Bang b = bi.next();
+            if (b.completed()) { bi.remove(); }
+            else { b.draw(bounceGame.batch); }
+        }
         ball.draw(bounceGame.batch);
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
