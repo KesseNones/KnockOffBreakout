@@ -1,7 +1,9 @@
 package wsuv.bounce;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.ArrayList;
@@ -9,14 +11,16 @@ import java.util.Iterator;
 
 public class PlayScreen extends ScreenAdapter {
     private enum SubState {READY, GAME_OVER, PLAYING}
-    private Ball ball;
     private BounceGame bounceGame;
+    private Ball ball;
     private HUD hud;
     private SubState state;
     private int bounces;
     private float timer;
 
+    private Sound boomSfx;
     private ArrayList<Bang> explosions;
+    BangAnimationFrames baf;
 
     public PlayScreen(BounceGame game) {
         timer = 0;
@@ -25,6 +29,14 @@ public class PlayScreen extends ScreenAdapter {
         ball = new Ball(game);
         bounces = 0;
         explosions = new ArrayList<>(10);
+        boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
+
+        // we've loaded textures, but the explosion texture isn't quite ready to go--
+        // we need to carve it up into frames.  All that work really
+        // only needs to happen once.  Since we only use explosions in the PlayScreen,
+        // we'll do it here, storing the work in a special object we'll use each time
+        // a new Bang instance is created...
+        baf = new BangAnimationFrames(bounceGame.am.get(BounceGame.RSC_EXPLOSION_FRAMES));
 
         // the HUD will show FPS always, by default.  Here's how
         // to use the HUD interface to silence it (and other HUD Data)
@@ -81,8 +93,9 @@ public class PlayScreen extends ScreenAdapter {
             @Override
             public boolean keyTyped(char character) {
                 if (character == '!') {
-                    System.out.println("Boom! (" + explosions.size() + ")" );
-                    explosions.add(new Bang(false, ball.getX(), ball.getY()));
+                    Gdx.app.log("Boom!",  "(" + explosions.size() + ")" );
+                    explosions.add(new Bang(baf, false, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                    boomSfx.play();
                     return true;
                 }
                 return false;
@@ -97,7 +110,6 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.app.log("PlayScreen", "show");
         state = SubState.READY;
         bounces = 0;
-
     }
 
     public void update(float delta) {
@@ -106,15 +118,18 @@ public class PlayScreen extends ScreenAdapter {
         if (ball.update() && state == SubState.PLAYING) {
             bounces++;
             // fast explosions off walls
-            explosions.add(new Bang(true, ball.getX(), ball.getY()));
+            explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+            boomSfx.play();
 
             if (bounces == 5) {
+                bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
                 state = SubState.GAME_OVER;
                 timer = 0; // restart the timer.
             }
         }
         if (state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
+            bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             bounces = 0;
         }
         if (state == SubState.GAME_OVER && timer > 3.0f) {
@@ -162,5 +177,31 @@ public class PlayScreen extends ScreenAdapter {
         }
         hud.draw(bounceGame.batch);
         bounceGame.batch.end();
+    }
+}
+
+/**
+ * This class we'll only instantiate once; it will hold data shared
+ * by all Bang instances
+ */
+class BangAnimationFrames {
+    float halfW, halfH;
+    TextureRegion[] frames;
+    BangAnimationFrames(Texture spritesheet) {
+        // split the single spritesheet into an array of equally sized TextureRegions
+        TextureRegion[][] tmp = TextureRegion.split(spritesheet,
+                spritesheet.getWidth() / BounceGame.RSC_EXPLOSION_FRAMES_COLS,
+                spritesheet.getHeight() / BounceGame.RSC_EXPLOSION_FRAMES_ROWS);
+
+        halfW = (spritesheet.getWidth() / 2f) / BounceGame.RSC_EXPLOSION_FRAMES_COLS;
+        halfH = (spritesheet.getHeight() / 2f) / BounceGame.RSC_EXPLOSION_FRAMES_ROWS;
+
+        frames = new TextureRegion[BounceGame.RSC_EXPLOSION_FRAMES_COLS * BounceGame.RSC_EXPLOSION_FRAMES_ROWS];
+        int index = 0;
+        for (int i = 0; i < BounceGame.RSC_EXPLOSION_FRAMES_ROWS; i++) {
+            for (int j = 0; j < BounceGame.RSC_EXPLOSION_FRAMES_COLS; j++) {
+                frames[index++] = tmp[i][j];
+            }
+        }
     }
 }

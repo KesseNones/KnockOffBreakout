@@ -1,6 +1,7 @@
 package wsuv.bounce;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -42,7 +43,7 @@ public class LoadScreen extends ScreenAdapter {
 
         if (font == null && bounceGame.am.isLoaded(BounceGame.RSC_MONO_FONT)) {
             font = bounceGame.am.get(BounceGame.RSC_MONO_FONT);
-        } else if ((credits_offset >= credits.length) && bounceGame.am.isFinished()) {
+        } else if (bounceGame.am.isFinished() && (credits_offset >= credits.length || Gdx.input.isKeyPressed(Input.Keys.SPACE)) ) {
             bounceGame.setScreen(new PlayScreen(bounceGame));
         } else if (font != null) {
             // once the font is loaded, start showing credits.

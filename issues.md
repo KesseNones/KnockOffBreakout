@@ -8,8 +8,8 @@
 - **[6]** Add inputAdapter to game and ensure HUD is compatible
 - **[7]** Add console command to control ball's location/velocity
 - **[8]** Add explosion animation
-
-## Open Issues ##
 - **[9]** Add ball tracking HUD item
 - **[10]** Add sounds and music
+
+## Open Issues ##
 
