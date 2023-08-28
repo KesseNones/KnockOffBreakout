@@ -17,7 +17,7 @@ public class Ball extends Sprite {
         yVelocity = game.random.nextFloat(80, 150);
         if (game.random.nextBoolean()) xVelocity *= -1;
         if (game.random.nextBoolean()) yVelocity *= -1;
-        setCenter(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        setCenter(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
     }
 
     /**

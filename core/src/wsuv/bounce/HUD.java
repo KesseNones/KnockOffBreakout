@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 
@@ -57,7 +58,6 @@ public class HUD {
     private int xMargin;
     private int yMargin;
     private int rColumn;
-    private float lineHeight;
     private boolean open;
     private BitmapFont font;
     private Deque<String> consoleLines;
@@ -68,38 +68,6 @@ public class HUD {
     private long lastDataRefresh;
     private StringBuilder hudDataBuffer;
 
-    private InputAdapter inputAdapter = new InputAdapter() {
-        public boolean keyTyped(char character) {
-            String cmd, result;
-            if (character == '`') {
-                toggleConsole();
-                return true;
-            }
-            if (open) {
-                if (character == '\n') {
-                    // when the line is ended, see if a valid command was issued...
-                    cmd = currentLine.toString();
-                    String[] words = cmd.split("[ \t]+");
-                    HUDActionCommand callback = knownCommands.get(words[0]);
-                    result = (callback == null) ? "?" : callback.execute(words);
-                    consoleLines.add(PROMPT + cmd);
-                    for(String line : result.split("[\n]+")) {
-                        consoleLines.add(line);
-                    }
-                    while (consoleLines.size() >= linesbuffered) {
-                        consoleLines.removeFirst();
-                    }
-                    currentLine.setLength(0);
-                } else if (character == '\b') {
-                    currentLine.setLength(currentLine.length() - 1);
-                } else {
-                    currentLine.append(character);
-                }
-                return true;
-            }
-            return false;
-        }
-    };
 
     /**
      * Make a HUD with sane defaults.
@@ -124,13 +92,11 @@ public class HUD {
         yMargin = ymargin;
         rColumn = rcol;
         currentLine = new StringBuilder(60);
-        consoleLines = new ArrayDeque<String>();
+        consoleLines = new ArrayDeque<>();
         knownCommands = new HashMap<>(10);
         hudData = new HashMap<>(10);
         hudDataBuffer = new StringBuilder(20);
-
         font = fnt;
-        lineHeight = font.getLineHeight();
 
         // make a background for the console...bigger than needed!
         Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
@@ -179,6 +145,38 @@ public class HUD {
             }
         });
 
+        // create a new InputAdapter to allow the HUD to get commands etc...
+        InputAdapter inputAdapter = new InputAdapter() {
+            public boolean keyTyped(char character) {
+                String cmd, result;
+                if (character == '`') {
+                    toggleConsole();
+                    return true;
+                }
+                if (open) {
+                    if (character == '\n') {
+                        // when the line is ended, see if a valid command was issued...
+                        cmd = currentLine.toString();
+                        String[] words = cmd.split("[ \t]+");
+                        HUDActionCommand callback = knownCommands.get(words[0]);
+                        result = (callback == null) ? "?" : callback.execute(words);
+                        consoleLines.add(PROMPT + cmd);
+                        Collections.addAll(consoleLines, result.split("\n"));
+                        while (consoleLines.size() >= linesbuffered) {
+                            consoleLines.removeFirst();
+                        }
+                        currentLine.setLength(0);
+                    } else if (character == '\b') {
+                        currentLine.setLength(currentLine.length() - 1);
+                    } else {
+                        currentLine.append(character);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        };
+
         lastDataRefresh = TimeUtils.millis() - DATA_REFRESH_INTERVAL;
         if (Gdx.input.getInputProcessor() != null) {
             Gdx.app.log("HUD", "InputProcessor detected...installing multiplexer (see HUD docs if you have problems)");
@@ -212,8 +210,7 @@ public class HUD {
      * @param batch an open Batch in which to do the rendering
      */
     public void draw(Batch batch) {
-        String console = "";
-        HUDViewCommand.Visibility desiredvisibility;
+        String console;
         int xlocation;
 
         if (open) {
@@ -296,7 +293,7 @@ public class HUD {
     }
 
     /**
-     * For all registered HUDViewCommands, set the visibility as specifed
+     * For all registered HUDViewCommands, set the visibility as specified
      */
     public void setDataVisibility(HUDViewCommand.Visibility v) {
         for(HUDViewCommand c : hudData.values()) {

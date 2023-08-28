@@ -9,7 +9,7 @@ public interface HUDActionCommand {
     /**
      * Perform the command
      *
-     * @param - cmd the command line used to invoke this command
+     * @param cmd -  the command line used to invoke this command
      * @return - a String of user feedback
      */
     String execute(String[] cmd);

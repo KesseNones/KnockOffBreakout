@@ -1,8 +1,6 @@
 package wsuv.bounce;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -16,6 +14,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import java.util.Random;
 
 public class BounceGame extends Game {
+    public static final int RSC_EXPLOSION_FRAMES_ROWS = 1;
+    public static final int RSC_EXPLOSION_FRAMES_COLS = 23;
+    public static final String RSC_EXPLOSION_FRAMES = "explosion.png";
     public static final String RSC_GAMEOVER_IMG = "gameover.png";
     public static final String RSC_PRESSAKEY_IMG = "pressakey.png";
     public static final String RSC_BALL_IMG = "ball.png";
@@ -47,20 +48,10 @@ public class BounceGame extends Game {
         am.load(RSC_BALL_IMG, Texture.class);
         am.load(RSC_GAMEOVER_IMG, Texture.class);
         am.load(RSC_PRESSAKEY_IMG, Texture.class);
+        am.load(RSC_EXPLOSION_FRAMES, Texture.class);
 
         batch = new SpriteBatch();
         setScreen(new LoadScreen(this));
-
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyTyped(char character) {
-                if (character == '!') {
-                    System.out.println("Boom!");
-                    return true;
-                }
-                return false;
-            }
-        });
 
     }
 
