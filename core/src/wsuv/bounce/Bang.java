@@ -32,7 +32,7 @@ public class Bang {
                 frames[index++] = tmp[i][j];
             }
         }
-        animation = new Animation<TextureRegion>(fast ? 0.03f : .07f, frames);
+        animation = new Animation<TextureRegion>(fast ? 0.06f : .12f, frames);
     }
     public void draw(Batch sb) {
         time += Gdx.graphics.getDeltaTime();
