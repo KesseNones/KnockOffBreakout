@@ -122,12 +122,14 @@ public class PlayScreen extends ScreenAdapter {
             boomSfx.play();
 
             if (bounces == 5) {
+                bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
                 state = SubState.GAME_OVER;
                 timer = 0; // restart the timer.
             }
         }
         if (state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
+            bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             bounces = 0;
         }
         if (state == SubState.GAME_OVER && timer > 3.0f) {
