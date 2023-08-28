@@ -23,8 +23,6 @@ public class Bang {
         this.y = y - bf.halfH;
         time = 0;
 
-        System.out.println("X " + x + " w: " + bf.halfW );
-        System.out.println("Y " + y + " h: " + bf.halfH );
         animation = new Animation<>(fast ? 0.06f : .12f, bf.frames);
     }
     public void draw(Batch sb) {

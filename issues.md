@@ -9,7 +9,7 @@
 - **[7]** Add console command to control ball's location/velocity
 - **[8]** Add explosion animation
 - **[9]** Add ball tracking HUD item
+- **[10]** Add sounds and music
 
 ## Open Issues ##
-- **[10]** Add sounds and music
 

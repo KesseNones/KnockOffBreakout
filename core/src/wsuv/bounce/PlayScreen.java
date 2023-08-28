@@ -93,7 +93,7 @@ public class PlayScreen extends ScreenAdapter {
             @Override
             public boolean keyTyped(char character) {
                 if (character == '!') {
-                    System.out.println("Boom! (" + explosions.size() + ")" );
+                    Gdx.app.log("Boom!",  "(" + explosions.size() + ")" );
                     explosions.add(new Bang(baf, false, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
                     return true;
