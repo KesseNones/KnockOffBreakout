@@ -148,10 +148,13 @@ public class PlayScreen extends ScreenAdapter {
 //            }
             //Moves paddle to the left until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                paddle.setX(paddle.getX() - 10f);
+                if (paddle.getX() > 0f){
+                    paddle.setX(paddle.getX() - 10f);
+                }
             }
             //Moves paddle to the right until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                if ((paddle.getX() + paddle.getWidth()) < Gdx.graphics.getWidth())
                 paddle.setX(paddle.getX() + 10f);
             }
         }
