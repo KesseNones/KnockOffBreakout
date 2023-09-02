@@ -13,3 +13,6 @@
 
 ## Open Issues ##
 
+- **[11]** Add paddle controllable using A and D keys.
+- **[12]** Add basic breakable bricks at top of screen.
+- **[13]** Add death mechanic.
