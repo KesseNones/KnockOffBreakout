@@ -137,19 +137,22 @@ public class PlayScreen extends ScreenAdapter {
         if (state == SubState.GAME_OVER && timer > 3.0f) {
             state = SubState.READY;
         }
-        // ignore key presses when console is open...
-        if (!hud.isOpen()) {
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                ball.yVelocity += 2;
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                ball.yVelocity -= 2;
-            }
+        // ignore key presses when console is open and when game is over...
+        if (!hud.isOpen() && state != SubState.GAME_OVER) {
+            //FUNTIONALITY MIGHT RETURN TO W AND S KEYS
+//            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+//                ball.yVelocity += 2;
+//            }
+//            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+//                ball.yVelocity -= 2;
+//            }
+            //Moves paddle to the left until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                ball.xVelocity -= 2;
+                paddle.setX(paddle.getX() - 10f);
             }
+            //Moves paddle to the right until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                ball.xVelocity += 2;
+                paddle.setX(paddle.getX() + 10f);
             }
         }
     }
