@@ -13,6 +13,7 @@ public class PlayScreen extends ScreenAdapter {
     private enum SubState {READY, GAME_OVER, PLAYING}
     private BounceGame bounceGame;
     private Ball ball;
+    private Paddle paddle;
     private HUD hud;
     private SubState state;
     private int bounces;
@@ -27,6 +28,7 @@ public class PlayScreen extends ScreenAdapter {
         bounceGame = game;
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
+        paddle = new Paddle(game);
         bounces = 0;
         explosions = new ArrayList<>(10);
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
@@ -164,6 +166,7 @@ public class PlayScreen extends ScreenAdapter {
             else { b.draw(bounceGame.batch); }
         }
         ball.draw(bounceGame.batch);
+        paddle.draw(bounceGame.batch);
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
             case GAME_OVER:
