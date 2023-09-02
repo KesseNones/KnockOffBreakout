@@ -45,4 +45,27 @@ public class Ball extends Sprite {
 
         return bounced;
     }
+
+    //Used to detect if the ball collided with the paddle.
+    public boolean collidedWithPaddle(Paddle pd){
+        boolean collided = false;
+        float ballBottomY = getY();
+        float paddleTopY = pd.getY();
+        float ballBottomLeftX = getX();
+        float ballBottomRightX = getX() + getWidth();
+        float paddleLeftX = pd.getX();
+        float paddleRightX = pd.getX() + pd.getWidth();
+
+        if ((ballBottomY > (paddleTopY - 1f)) &&
+                (ballBottomY < (paddleTopY + 1f)) &&
+                ((ballBottomLeftX > paddleLeftX && ballBottomLeftX < paddleRightX) ||
+                        (ballBottomRightX > paddleLeftX && ballBottomRightX < paddleRightX))
+            ){
+            xVelocity *= -1;
+            yVelocity *= -1;
+            collided = true;
+        }
+
+        return collided;
+    }
 }

@@ -117,13 +117,13 @@ public class PlayScreen extends ScreenAdapter {
     public void update(float delta) {
         timer += delta;
         // always update the ball, but ignore bounces unless we're in PLAY state
-        if (ball.update() && state == SubState.PLAYING) {
+        if ((ball.update() || ball.collidedWithPaddle(paddle)) && state == SubState.PLAYING) {
             bounces++;
             // fast explosions off walls
             explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
             boomSfx.play();
 
-            if (bounces == 5) {
+            if (bounces == 144) {
                 bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
                 state = SubState.GAME_OVER;
                 timer = 0; // restart the timer.
