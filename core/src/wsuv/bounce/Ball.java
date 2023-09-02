@@ -13,8 +13,8 @@ public class Ball extends Sprite {
     public Ball(BounceGame game) {
         super(game.am.get("ball.png", Texture.class));
 
-        xVelocity = game.random.nextFloat(80, 150);
-        yVelocity = game.random.nextFloat(80, 150);
+        xVelocity = (game.random.nextFloat() * 70f) + 150f;
+        yVelocity = (game.random.nextFloat() * 70f) + 150f;
         if (game.random.nextBoolean()) xVelocity *= -1;
         if (game.random.nextBoolean()) yVelocity *= -1;
         setCenter(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
@@ -44,5 +44,28 @@ public class Ball extends Sprite {
         setY(y + time * yVelocity);
 
         return bounced;
+    }
+
+    //Used to detect if the ball collided with the paddle.
+    public boolean collidedWithPaddle(Paddle pd){
+        boolean collided = false;
+        float ballBottomY = getY();
+        float paddleTopY = pd.getY();
+        float ballBottomLeftX = getX();
+        float ballBottomRightX = getX() + getWidth();
+        float paddleLeftX = pd.getX();
+        float paddleRightX = pd.getX() + pd.getWidth();
+
+        if ((ballBottomY > (paddleTopY - 1f)) &&
+                (ballBottomY < (paddleTopY + 1f)) &&
+                ((ballBottomLeftX > paddleLeftX && ballBottomLeftX < paddleRightX) ||
+                        (ballBottomRightX > paddleLeftX && ballBottomRightX < paddleRightX))
+            ){
+            xVelocity *= -1;
+            yVelocity *= -1;
+            collided = true;
+        }
+
+        return collided;
     }
 }

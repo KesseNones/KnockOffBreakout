@@ -23,6 +23,7 @@ public class BounceGame extends Game {
     public static final String RSC_GAMEOVER_IMG = "gameover.png";
     public static final String RSC_PRESSAKEY_IMG = "pressakey.png";
     public static final String RSC_BALL_IMG = "ball.png";
+    public static final String RSC_PADDLE_IMG = "paddle.png";
     public static final String RSC_MONO_FONT_FILE = "JetBrainsMono-Regular.ttf";
     public static final String RSC_MONO_FONT = "JBM.ttf";
     public static final String RSC_EXPLOSION_SFX = "explosion7s.wav";
@@ -51,6 +52,7 @@ public class BounceGame extends Game {
 
         // Load Textures after the font...
         am.load(RSC_BALL_IMG, Texture.class);
+        am.load(RSC_PADDLE_IMG, Texture.class);
         am.load(RSC_GAMEOVER_IMG, Texture.class);
         am.load(RSC_PRESSAKEY_IMG, Texture.class);
         am.load(RSC_EXPLOSION_FRAMES, Texture.class);
@@ -67,7 +69,7 @@ public class BounceGame extends Game {
         music = Gdx.audio.newMusic(Gdx.files.internal("sadshark.mp3"));
         music.setLooping(true);
         music.setVolume(.5f);
-        music.play();
+        //music.play(); //UNCOMMENT TO PLAY DEFAULT BACKGROUND MUSIC.
     }
 
     @Override

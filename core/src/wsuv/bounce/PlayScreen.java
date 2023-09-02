@@ -13,6 +13,7 @@ public class PlayScreen extends ScreenAdapter {
     private enum SubState {READY, GAME_OVER, PLAYING}
     private BounceGame bounceGame;
     private Ball ball;
+    private Paddle paddle;
     private HUD hud;
     private SubState state;
     private int bounces;
@@ -27,6 +28,7 @@ public class PlayScreen extends ScreenAdapter {
         bounceGame = game;
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
+        paddle = new Paddle(game);
         bounces = 0;
         explosions = new ArrayList<>(10);
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
@@ -115,13 +117,13 @@ public class PlayScreen extends ScreenAdapter {
     public void update(float delta) {
         timer += delta;
         // always update the ball, but ignore bounces unless we're in PLAY state
-        if (ball.update() && state == SubState.PLAYING) {
+        if ((ball.update() || ball.collidedWithPaddle(paddle)) && state == SubState.PLAYING) {
             bounces++;
             // fast explosions off walls
             explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
             boomSfx.play();
 
-            if (bounces == 5) {
+            if (bounces == 144) {
                 bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
                 state = SubState.GAME_OVER;
                 timer = 0; // restart the timer.
@@ -135,19 +137,25 @@ public class PlayScreen extends ScreenAdapter {
         if (state == SubState.GAME_OVER && timer > 3.0f) {
             state = SubState.READY;
         }
-        // ignore key presses when console is open...
-        if (!hud.isOpen()) {
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                ball.yVelocity += 2;
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                ball.yVelocity -= 2;
-            }
+        // ignore key presses when console is open and when game is over...
+        if (!hud.isOpen() && state != SubState.GAME_OVER) {
+            //FUNTIONALITY MIGHT RETURN TO W AND S KEYS
+//            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+//                ball.yVelocity += 2;
+//            }
+//            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+//                ball.yVelocity -= 2;
+//            }
+            //Moves paddle to the left until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                ball.xVelocity -= 2;
+                if (paddle.getX() > 0f){
+                    paddle.setX(paddle.getX() - 10f);
+                }
             }
+            //Moves paddle to the right until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                ball.xVelocity += 2;
+                if ((paddle.getX() + paddle.getWidth()) < Gdx.graphics.getWidth())
+                paddle.setX(paddle.getX() + 10f);
             }
         }
     }
@@ -164,6 +172,7 @@ public class PlayScreen extends ScreenAdapter {
             else { b.draw(bounceGame.batch); }
         }
         ball.draw(bounceGame.batch);
+        paddle.draw(bounceGame.batch);
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
             case GAME_OVER:
