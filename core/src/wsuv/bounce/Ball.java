@@ -13,8 +13,8 @@ public class Ball extends Sprite {
     public Ball(BounceGame game) {
         super(game.am.get("ball.png", Texture.class));
 
-        xVelocity = game.random.nextFloat(150, 220);
-        yVelocity = game.random.nextFloat(150, 220);
+        xVelocity = (game.random.nextFloat() * 70f) + 150f;
+        yVelocity = (game.random.nextFloat() * 70f) + 150f;
         if (game.random.nextBoolean()) xVelocity *= -1;
         if (game.random.nextBoolean()) yVelocity *= -1;
         setCenter(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
