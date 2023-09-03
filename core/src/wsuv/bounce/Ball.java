@@ -88,7 +88,7 @@ public class Ball extends Sprite {
 
         collided = (leftEdgeInXRange || rightEdgeInXRange) && (topEdgeInYRange || bottomEdgeInYRange);
 
-        if (collided) {xVelocity *= -1; yVelocity *= -1;}
+        if (collided) {yVelocity *= -1;}
 
         return collided;
     }
