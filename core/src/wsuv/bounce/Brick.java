@@ -23,7 +23,11 @@ public class Brick extends Sprite {
 
     public boolean collide(){
         health--;
-        spriteExists = health < 1;
+        spriteExists = health > 1;
+        return spriteExists;
+    }
+
+    public boolean doesSpriteExist(){
         return spriteExists;
     }
 }

@@ -69,6 +69,11 @@ public class Ball extends Sprite {
     }
 
     public boolean collidedWithBrick(Brick b){
+        //Stops early if there's no brick to collide with.
+        if (!b.doesSpriteExist()){
+            return false;
+        }
+
         boolean collided = false;
         float brickLeftX = b.getX();
         float brickRightX = b.getX() + b.getWidth();

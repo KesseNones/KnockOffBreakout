@@ -120,11 +120,22 @@ public class PlayScreen extends ScreenAdapter {
     public void update(float delta) {
         timer += delta;
         // always update the ball, but ignore bounces unless we're in PLAY state
-        if ((ball.update() || ball.collidedWithPaddle(paddle) || ball.collidedWithBrick(testBrick)) && state == SubState.PLAYING) {
-            bounces++;
-            // fast explosions off walls
-            explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
-            boomSfx.play();
+        if (state == SubState.PLAYING) {
+            boolean ballHitWall = ball.update();
+            boolean ballHitPaddle = ball.collidedWithPaddle(paddle);
+            boolean ballHitBrick = ball.collidedWithBrick(testBrick);
+
+            if (ballHitWall || ballHitPaddle || ballHitBrick){
+                // fast explosions off walls and other objects.
+                explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                boomSfx.play();
+
+                if (ballHitBrick){
+                    testBrick.collide();
+                }else{
+                    bounces++;
+                }
+            }
 
             if (bounces == 144) {
                 bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
@@ -176,7 +187,9 @@ public class PlayScreen extends ScreenAdapter {
         }
         ball.draw(bounceGame.batch);
         paddle.draw(bounceGame.batch);
-        testBrick.draw(bounceGame.batch);
+        if (testBrick.doesSpriteExist()){
+            testBrick.draw(bounceGame.batch);
+        }
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
             case GAME_OVER:
