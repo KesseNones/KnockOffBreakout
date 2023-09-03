@@ -30,7 +30,7 @@ public class PlayScreen extends ScreenAdapter {
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
         paddle = new Paddle(game);
-        testBrick = new Brick(game);
+        testBrick = new Brick(game, 1);
 
         bounces = 0;
         explosions = new ArrayList<>(10);
@@ -120,7 +120,7 @@ public class PlayScreen extends ScreenAdapter {
     public void update(float delta) {
         timer += delta;
         // always update the ball, but ignore bounces unless we're in PLAY state
-        if ((ball.update() || ball.collidedWithPaddle(paddle)) && state == SubState.PLAYING) {
+        if ((ball.update() || ball.collidedWithPaddle(paddle) || ball.collidedWithBrick(testBrick)) && state == SubState.PLAYING) {
             bounces++;
             // fast explosions off walls
             explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
