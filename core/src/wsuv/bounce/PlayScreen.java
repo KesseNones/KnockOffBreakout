@@ -128,8 +128,13 @@ public class PlayScreen extends ScreenAdapter {
         if (state == SubState.PLAYING) {
             boolean ballHitWall = ball.update();
             boolean ballHitPaddle = ball.collidedWithPaddle(paddle);
+
+            //Determines if ball has collided with any bricks.
             boolean ballHitBrick = false;
-                    //ball.collidedWithBrick(testBrick);
+            for (int i = 0; i < 10; i++){
+                ballHitBrick = ball.collidedWithBrick(bricks[i]);
+                if (ballHitBrick) {bricks[i].collide();}
+            }
 
             if (ballHitWall || ballHitPaddle || ballHitBrick){
 
@@ -137,11 +142,7 @@ public class PlayScreen extends ScreenAdapter {
                 explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                 boomSfx.play();
 
-//                if (ballHitBrick){
-//                    testBrick.collide();
-//                }else{
-//                    bounces++;
-//                }
+                bounces++;
             }
 
             if (bounces == 144) {
