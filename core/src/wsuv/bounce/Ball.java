@@ -12,6 +12,7 @@ public class Ball extends Sprite {
 
     public Ball(BounceGame game) {
         super(game.am.get("ball.png", Texture.class));
+        setSize(32f, 32f); //MAY BE UNDONE LATER
 
         xVelocity = (game.random.nextFloat() * 70f) + 150f;
         yVelocity = (game.random.nextFloat() * 70f) + 150f;
