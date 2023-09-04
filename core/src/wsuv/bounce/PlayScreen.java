@@ -133,7 +133,13 @@ public class PlayScreen extends ScreenAdapter {
             boolean ballHitBrick = false;
             for (int i = 0; i < 10; i++){
                 ballHitBrick = ball.collidedWithBrick(bricks[i]);
-                if (ballHitBrick) {bricks[i].collide();}
+                if (ballHitBrick) {
+                    bricks[i].collide();
+                    explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                    boomSfx.play();
+
+                    bounces++;
+                }
             }
 
             if (ballHitWall || ballHitPaddle || ballHitBrick){
