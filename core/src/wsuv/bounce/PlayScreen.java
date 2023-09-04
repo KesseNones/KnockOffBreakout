@@ -14,6 +14,7 @@ public class PlayScreen extends ScreenAdapter {
     private BounceGame bounceGame;
     private Ball ball;
     private Paddle paddle;
+    private int numBricks;
     private Brick[] bricks;
     private HUD hud;
     private SubState state;
@@ -32,9 +33,10 @@ public class PlayScreen extends ScreenAdapter {
         paddle = new Paddle(game);
 
         //Creates a row of ten bricks to be hit with the ball.
-        bricks = new Brick[10];
-        for (int i = 0; i < 10; i++){
-            bricks[i] = new Brick(game, 1, 0, i);
+        numBricks = 30;
+        bricks = new Brick[numBricks];
+        for (int i = 0; i < numBricks; i++){
+            bricks[i] = new Brick(game, 1 + (int)(1.5f * (i / 10)), (int)(i / 10), i % 10);
         }
 
         bounces = 0;
@@ -131,7 +133,7 @@ public class PlayScreen extends ScreenAdapter {
 
             //Determines if ball has collided with any bricks.
             boolean ballHitBrick = false;
-            for (int i = 0; i < 10; i++){
+            for (int i = 0; i < numBricks; i++){
                 ballHitBrick = ball.collidedWithBrick(bricks[i]);
                 if (ballHitBrick) {
                     bricks[i].collide();
@@ -203,7 +205,7 @@ public class PlayScreen extends ScreenAdapter {
         paddle.draw(bounceGame.batch);
 
         //Draws all existing blocks.
-        for (int i = 0 ; i < 10; i++){
+        for (int i = 0 ; i < numBricks; i++){
             if (bricks[i].doesSpriteExist()){
                 bricks[i].draw(bounceGame.batch);
             }

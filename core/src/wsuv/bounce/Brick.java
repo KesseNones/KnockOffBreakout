@@ -19,7 +19,7 @@ public class Brick extends Sprite {
             health = initialHealth;
         }
         setX(Gdx.graphics.getWidth() / (10f) * col);
-        setY(Gdx.graphics.getHeight() * 0.75f * (1f + row)); //WILL FIGURE THIS OUT LATER
+        setY((Gdx.graphics.getHeight() * 0.6f) + (80f * row) ); //WILL FIGURE THIS OUT LATER
     }
 
     public boolean collide(){
@@ -27,6 +27,8 @@ public class Brick extends Sprite {
         spriteExists = health > 1;
         return spriteExists;
     }
+
+    public int getHealth(){return health;}
 
     public boolean doesSpriteExist(){
         return spriteExists;
