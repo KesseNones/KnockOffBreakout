@@ -9,7 +9,7 @@ public class Brick extends Sprite {
     private boolean spriteExists;
     private int health;
 
-    public Brick(BounceGame game, int initialHealth) {
+    public Brick(BounceGame game, int initialHealth, float row, float col) {
         super(game.am.get("defaultBrick.png", Texture.class));
         spriteExists = true;
         //Sets up health of brick based on input.
@@ -18,7 +18,8 @@ public class Brick extends Sprite {
         }else{
             health = initialHealth;
         }
-        setCenter(Gdx.graphics.getWidth() / 2f, (Gdx.graphics.getHeight() * 0.75f));
+        setX(Gdx.graphics.getWidth() / (10f) * col);
+        setY(Gdx.graphics.getHeight() * 0.75f * (1f + row)); //WILL FIGURE THIS OUT LATER
     }
 
     public boolean collide(){

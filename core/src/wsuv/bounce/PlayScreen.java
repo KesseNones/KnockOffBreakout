@@ -14,7 +14,7 @@ public class PlayScreen extends ScreenAdapter {
     private BounceGame bounceGame;
     private Ball ball;
     private Paddle paddle;
-    private Brick testBrick;
+    private Brick[] bricks;
     private HUD hud;
     private SubState state;
     private int bounces;
@@ -30,7 +30,12 @@ public class PlayScreen extends ScreenAdapter {
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
         paddle = new Paddle(game);
-        testBrick = new Brick(game, 1);
+
+        //Creates a row of ten bricks to be hit with the ball.
+        bricks = new Brick[10];
+        for (int i = 0; i < 10; i++){
+            bricks[i] = new Brick(game, 1, 0, i);
+        }
 
         bounces = 0;
         explosions = new ArrayList<>(10);
@@ -123,18 +128,20 @@ public class PlayScreen extends ScreenAdapter {
         if (state == SubState.PLAYING) {
             boolean ballHitWall = ball.update();
             boolean ballHitPaddle = ball.collidedWithPaddle(paddle);
-            boolean ballHitBrick = ball.collidedWithBrick(testBrick);
+            boolean ballHitBrick = false;
+                    //ball.collidedWithBrick(testBrick);
 
             if (ballHitWall || ballHitPaddle || ballHitBrick){
+
                 // fast explosions off walls and other objects.
                 explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                 boomSfx.play();
 
-                if (ballHitBrick){
-                    testBrick.collide();
-                }else{
-                    bounces++;
-                }
+//                if (ballHitBrick){
+//                    testBrick.collide();
+//                }else{
+//                    bounces++;
+//                }
             }
 
             if (bounces == 144) {
@@ -187,8 +194,12 @@ public class PlayScreen extends ScreenAdapter {
         }
         ball.draw(bounceGame.batch);
         paddle.draw(bounceGame.batch);
-        if (testBrick.doesSpriteExist()){
-            testBrick.draw(bounceGame.batch);
+
+        //Draws all existing blocks.
+        for (int i = 0 ; i < 10; i++){
+            if (bricks[i].doesSpriteExist()){
+                bricks[i].draw(bounceGame.batch);
+            }
         }
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
