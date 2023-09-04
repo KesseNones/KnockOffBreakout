@@ -19,7 +19,10 @@ public class Brick extends Sprite {
             health = initialHealth;
         }
         setX(Gdx.graphics.getWidth() / (10f) * col);
-        setY((Gdx.graphics.getHeight() * 0.6f) + (80f * row) ); //WILL FIGURE THIS OUT LATER
+        boolean rowGreaterThanThree = row > 2;
+        float add;
+        if (rowGreaterThanThree){add = 40f;}else{add = 0f;}
+        setY((Gdx.graphics.getHeight() * 0.6f) + (40f * row) + add);
     }
 
     public boolean collide(){

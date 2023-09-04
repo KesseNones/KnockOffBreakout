@@ -33,10 +33,10 @@ public class PlayScreen extends ScreenAdapter {
         paddle = new Paddle(game);
 
         //Creates a row of ten bricks to be hit with the ball.
-        numBricks = 30;
+        numBricks = 60;
         bricks = new Brick[numBricks];
         for (int i = 0; i < numBricks; i++){
-            bricks[i] = new Brick(game, 1 + (int)(1.5f * (i / 10)), (int)(i / 10), i % 10);
+            bricks[i] = new Brick(game, 1 + (i / 10), (int)(i / 10), i % 10);
         }
 
         bounces = 0;
