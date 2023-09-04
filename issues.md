@@ -11,9 +11,9 @@
 - **[9]** Add ball tracking HUD item
 - **[10]** Add sounds and music
 - **[11]** Add paddle controllable using A and D keys.
+- **[12]** Add basic breakable bricks at near top of screen.
 
 ## Open Issues ##
 
-- **[12]** Add basic breakable bricks at near top of screen.
 - **[13]** Add death mechanic.
 - **[14]** Improve collision problems.

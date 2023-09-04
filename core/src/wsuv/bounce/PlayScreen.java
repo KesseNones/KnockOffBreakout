@@ -14,6 +14,8 @@ public class PlayScreen extends ScreenAdapter {
     private BounceGame bounceGame;
     private Ball ball;
     private Paddle paddle;
+    private int numBricks;
+    private Brick[] bricks;
     private HUD hud;
     private SubState state;
     private int bounces;
@@ -29,6 +31,14 @@ public class PlayScreen extends ScreenAdapter {
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
         paddle = new Paddle(game);
+
+        //Creates a row of ten bricks to be hit with the ball.
+        numBricks = 60;
+        bricks = new Brick[numBricks];
+        for (int i = 0; i < numBricks; i++){
+            bricks[i] = new Brick(game, 1 + (i / 10), (int)(i / 10), i % 10);
+        }
+
         bounces = 0;
         explosions = new ArrayList<>(10);
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
@@ -117,11 +127,31 @@ public class PlayScreen extends ScreenAdapter {
     public void update(float delta) {
         timer += delta;
         // always update the ball, but ignore bounces unless we're in PLAY state
-        if ((ball.update() || ball.collidedWithPaddle(paddle)) && state == SubState.PLAYING) {
-            bounces++;
-            // fast explosions off walls
-            explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
-            boomSfx.play();
+        if (state == SubState.PLAYING) {
+            boolean ballHitWall = ball.update();
+            boolean ballHitPaddle = ball.collidedWithPaddle(paddle);
+
+            //Determines if ball has collided with any bricks.
+            boolean ballHitBrick = false;
+            for (int i = 0; i < numBricks; i++){
+                ballHitBrick = ball.collidedWithBrick(bricks[i]);
+                if (ballHitBrick) {
+                    bricks[i].collide();
+                    explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                    boomSfx.play();
+
+                    bounces++;
+                }
+            }
+
+            if (ballHitWall || ballHitPaddle || ballHitBrick){
+
+                // fast explosions off walls and other objects.
+                explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                boomSfx.play();
+
+                bounces++;
+            }
 
             if (bounces == 144) {
                 bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
@@ -173,6 +203,13 @@ public class PlayScreen extends ScreenAdapter {
         }
         ball.draw(bounceGame.batch);
         paddle.draw(bounceGame.batch);
+
+        //Draws all existing blocks.
+        for (int i = 0 ; i < numBricks; i++){
+            if (bricks[i].doesSpriteExist()){
+                bricks[i].draw(bounceGame.batch);
+            }
+        }
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
             case GAME_OVER:

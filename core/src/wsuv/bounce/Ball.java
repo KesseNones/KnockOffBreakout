@@ -12,6 +12,7 @@ public class Ball extends Sprite {
 
     public Ball(BounceGame game) {
         super(game.am.get("ball.png", Texture.class));
+        setSize(32f, 32f); //MAY BE UNDONE LATER
 
         xVelocity = (game.random.nextFloat() * 70f) + 150f;
         yVelocity = (game.random.nextFloat() * 70f) + 150f;
@@ -61,10 +62,39 @@ public class Ball extends Sprite {
                 ((ballBottomLeftX > paddleLeftX && ballBottomLeftX < paddleRightX) ||
                         (ballBottomRightX > paddleLeftX && ballBottomRightX < paddleRightX))
             ){
-            xVelocity *= -1;
             yVelocity *= -1;
             collided = true;
         }
+
+        return collided;
+    }
+
+    public boolean collidedWithBrick(Brick b){
+        //Stops early if there's no brick to collide with.
+        if (!b.doesSpriteExist()){
+            return false;
+        }
+
+        boolean collided = false;
+        float brickLeftX = b.getX();
+        float brickRightX = b.getX() + b.getWidth();
+        float ballLeftX = getX();
+        float ballRightX = getX() + getWidth();
+
+        float brickBottomY = b.getY();
+        float brickTopY = b.getY() + b.getHeight();
+        float ballBottomY = getY();
+        float ballTopY = getY() + getHeight();
+
+        boolean leftEdgeInXRange = (ballLeftX > brickLeftX) && (ballLeftX < brickRightX);
+        boolean rightEdgeInXRange = (ballRightX > brickLeftX) && (ballRightX < brickRightX);
+
+        boolean topEdgeInYRange = (ballTopY > brickBottomY) && (ballTopY < brickTopY);
+        boolean bottomEdgeInYRange = (ballBottomY < brickTopY) && (ballBottomY > brickBottomY);
+
+        collided = (leftEdgeInXRange || rightEdgeInXRange) && (topEdgeInYRange || bottomEdgeInYRange);
+
+        if (collided) {yVelocity *= -1;}
 
         return collided;
     }

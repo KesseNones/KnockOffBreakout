@@ -9,6 +9,8 @@ public class Paddle extends Sprite {
 
     public Paddle(BounceGame game) {
         super(game.am.get("paddle.png", Texture.class));
+        //The size of the paddle is scaled down arbitrary. Likely will change later.
+        setSize(104f, 13f);
         setCenter(Gdx.graphics.getWidth() / 2f, (Gdx.graphics.getHeight() / 7.5f));
     }
 
