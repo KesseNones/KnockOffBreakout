@@ -126,6 +126,13 @@ public class PlayScreen extends ScreenAdapter {
 
     public void update(float delta) {
         timer += delta;
+
+        //Detects if ball goes below bottom of screen, indicating death.
+        if (state == SubState.PLAYING && ball.getY() < 0){
+            state = SubState.GAME_OVER;
+            timer = 0;
+        }
+
         // always update the ball, but ignore bounces unless we're in PLAY state
         if (state == SubState.PLAYING) {
             boolean ballHitWall = ball.update();
@@ -165,6 +172,7 @@ public class PlayScreen extends ScreenAdapter {
             bounces = 0;
         }
         if (state == SubState.GAME_OVER && timer > 3.0f) {
+            ball = new Ball(bounceGame);
             state = SubState.READY;
         }
         // ignore key presses when console is open and when game is over...
