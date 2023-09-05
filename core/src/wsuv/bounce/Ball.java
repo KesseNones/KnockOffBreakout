@@ -32,11 +32,11 @@ public class Ball extends Sprite {
         float y = getY();
         boolean bounced = false;
 
-        if (x < 0 || (x + getWidth()) > Gdx.graphics.getWidth()) {
+        if ( (getY() >= 0) && (x < 0 || (x + getWidth()) > Gdx.graphics.getWidth()) ) {
             xVelocity *= -1;
             bounced = true;
         }
-        if (y < 0 || (y + getHeight()) > Gdx.graphics.getHeight()) {
+        if ((y + getHeight()) > Gdx.graphics.getHeight()) {
             yVelocity *= -1;
             bounced = true;
         }
@@ -69,6 +69,7 @@ public class Ball extends Sprite {
         return collided;
     }
 
+    //Determines if the ball collided with a brick or not and responds accordingly.
     public boolean collidedWithBrick(Brick b){
         //Stops early if there's no brick to collide with.
         if (!b.doesSpriteExist()){
