@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 public class PlayScreen extends ScreenAdapter {
     private enum SubState {READY, GAME_OVER, PLAYING}
+    private int lives;
     private BounceGame bounceGame;
     private Ball ball;
     private Paddle paddle;
@@ -27,6 +28,7 @@ public class PlayScreen extends ScreenAdapter {
 
     public PlayScreen(BounceGame game) {
         timer = 0;
+        lives = 3;
         bounceGame = game;
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
@@ -86,6 +88,13 @@ public class PlayScreen extends ScreenAdapter {
                 return Integer.toString(bounces);
             }
         });
+
+        hud.registerView("Lives:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
+            @Override
+            public String execute(boolean consoleIsOpen) {
+                return Integer.toString(lives);
+            }
+        });
         hud.registerView("Ball @:", new HUDViewCommand(HUDViewCommand.Visibility.WHEN_OPEN) {
             @Override
             public String execute(boolean consoleIsOpen) {
@@ -130,6 +139,7 @@ public class PlayScreen extends ScreenAdapter {
         //Detects if ball goes below bottom of screen, indicating death.
         if (state == SubState.PLAYING && ball.getY() < 0){
             state = SubState.GAME_OVER;
+            lives--;
             timer = 0;
         }
 
