@@ -15,5 +15,5 @@
 
 ## Open Issues ##
 
-- **[13]** Add death mechanic.
+- **[13]** Add death mechanic with lives and game over.
 - **[14]** Improve collision problems.
