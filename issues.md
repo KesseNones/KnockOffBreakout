@@ -17,3 +17,5 @@
 ## Open Issues ##
 
 - **[14]** Fix collision problems with paddle and other elements.
+- **[15]** Add score system to game.
+- **[16]** Add levels to game.
