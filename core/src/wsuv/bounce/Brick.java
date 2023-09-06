@@ -25,10 +25,17 @@ public class Brick extends Sprite {
         setY((Gdx.graphics.getHeight() * 0.6f) + (40f * row) + add);
     }
 
+    //Destroys a brick due to the ball.
     public boolean collide(){
         health--;
         spriteExists = health > 1;
         return spriteExists;
+    }
+
+    //Brings brick back from the dead.
+    public void resurrect(int newHealth){
+        health = newHealth;
+        spriteExists = true;
     }
 
     public int getHealth(){return health;}

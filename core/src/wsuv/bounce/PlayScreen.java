@@ -187,11 +187,13 @@ public class PlayScreen extends ScreenAdapter {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             bounces = 0;
+            //If the game had ended before, the bricks are reset.
             if (gameHasEnded){
                 lives = 3;
-//                for (int i = 0; i < numBricks; i++){
-//                    bricks[i].JK
-//                }
+                gameHasEnded = false;
+                for (int i = 0; i < numBricks; i++){
+                    bricks[i].resurrect(1 + 1 + (i / 10));
+                }
             }
         }
         if (state == SubState.DEAD && timer > 3.0f) {
