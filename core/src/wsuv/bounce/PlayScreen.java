@@ -40,7 +40,7 @@ public class PlayScreen extends ScreenAdapter {
         numBricks = 60;
         bricks = new Brick[numBricks];
         for (int i = 0; i < numBricks; i++){
-            bricks[i] = new Brick(game, 1 + (i / 10), (int)(i / 10), i % 10);
+            bricks[i] = new Brick(game, 1 + (i / 30), (int)(i / 10), i % 10);
         }
 
         bounces = 0;
@@ -193,7 +193,7 @@ public class PlayScreen extends ScreenAdapter {
                 gameHasEnded = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
-                    bricks[i].resurrect(1 + 1 + (i / 10));
+                    bricks[i].resurrect(1 + 1 + (i / 30));
                 }
             }
         }
