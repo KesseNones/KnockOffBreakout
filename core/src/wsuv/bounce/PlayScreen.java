@@ -190,7 +190,7 @@ public class PlayScreen extends ScreenAdapter {
             if (gameHasEnded){
                 lives = 3;
 //                for (int i = 0; i < numBricks; i++){
-//                    bricks[i].
+//                    bricks[i].JK
 //                }
             }
         }
