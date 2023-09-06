@@ -12,8 +12,10 @@
 - **[10]** Add sounds and music
 - **[11]** Add paddle controllable using A and D keys.
 - **[12]** Add basic breakable bricks at near top of screen.
+- **[13]** Add death mechanic with lives and game over.
 
 ## Open Issues ##
 
-- **[13]** Add death mechanic.
-- **[14]** Improve collision problems.
+- **[14]** Fix collision problems with paddle and other elements.
+- **[15]** Add score system to game.
+- **[16]** Add levels to game.

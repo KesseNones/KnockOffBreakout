@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PlayScreen extends ScreenAdapter {
-    private enum SubState {READY, GAME_OVER, PLAYING}
+    private enum SubState {READY, DEAD, GAME_OVER, PLAYING}
+    private boolean gameHasEnded;
+    private int lives;
     private BounceGame bounceGame;
     private Ball ball;
     private Paddle paddle;
@@ -27,6 +29,8 @@ public class PlayScreen extends ScreenAdapter {
 
     public PlayScreen(BounceGame game) {
         timer = 0;
+        lives = 3;
+        gameHasEnded = false;
         bounceGame = game;
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
@@ -86,6 +90,13 @@ public class PlayScreen extends ScreenAdapter {
                 return Integer.toString(bounces);
             }
         });
+
+        hud.registerView("Lives:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
+            @Override
+            public String execute(boolean consoleIsOpen) {
+                return Integer.toString(lives);
+            }
+        });
         hud.registerView("Ball @:", new HUDViewCommand(HUDViewCommand.Visibility.WHEN_OPEN) {
             @Override
             public String execute(boolean consoleIsOpen) {
@@ -126,6 +137,19 @@ public class PlayScreen extends ScreenAdapter {
 
     public void update(float delta) {
         timer += delta;
+
+        //Detects if ball goes below bottom of screen, indicating death.
+        if (state == SubState.PLAYING && ball.getY() < 0){
+            lives--;
+            timer = 0;
+            if (lives > 0){
+                state = SubState.DEAD;
+            }else{
+                state = SubState.GAME_OVER;
+                gameHasEnded = true;
+            }
+        }
+
         // always update the ball, but ignore bounces unless we're in PLAY state
         if (state == SubState.PLAYING) {
             boolean ballHitWall = ball.update();
@@ -153,22 +177,38 @@ public class PlayScreen extends ScreenAdapter {
                 bounces++;
             }
 
-            if (bounces == 144) {
-                bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
-                state = SubState.GAME_OVER;
-                timer = 0; // restart the timer.
-            }
+//            if (bounces == 144) {
+//                bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
+//                state = SubState.GAME_OVER;
+//                timer = 0; // restart the timer.
+//            }
         }
         if (state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             bounces = 0;
+            //If the game had ended before, the bricks are reset.
+            if (gameHasEnded){
+                lives = 3;
+                gameHasEnded = false;
+                paddle = new Paddle(bounceGame);
+                for (int i = 0; i < numBricks; i++){
+                    bricks[i].resurrect(1 + 1 + (i / 10));
+                }
+            }
         }
-        if (state == SubState.GAME_OVER && timer > 3.0f) {
+        if (state == SubState.DEAD && timer > 3.0f) {
+            ball = new Ball(bounceGame);
             state = SubState.READY;
         }
+
+        if (state == SubState.GAME_OVER && timer > 5f){
+            ball = new Ball(bounceGame);
+            state = SubState.READY;
+        }
+
         // ignore key presses when console is open and when game is over...
-        if (!hud.isOpen() && state != SubState.GAME_OVER) {
+        if (!hud.isOpen() && (state != SubState.GAME_OVER && state != SubState.DEAD)) {
             //FUNTIONALITY MIGHT RETURN TO W AND S KEYS
 //            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
 //                ball.yVelocity += 2;
@@ -184,8 +224,7 @@ public class PlayScreen extends ScreenAdapter {
             }
             //Moves paddle to the right until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                if ((paddle.getX() + paddle.getWidth()) < Gdx.graphics.getWidth())
-                paddle.setX(paddle.getX() + 10f);
+                if ((paddle.getX() + paddle.getWidth()) < Gdx.graphics.getWidth()) paddle.setX(paddle.getX() + 10f);
             }
         }
     }
@@ -212,6 +251,9 @@ public class PlayScreen extends ScreenAdapter {
         }
         // this logic could also be pushed into a method on SubState enum
         switch (state) {
+            case DEAD:
+                bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_DEATH_IMG, Texture.class), 200, 200);
+                break;
             case GAME_OVER:
                 bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_GAMEOVER_IMG, Texture.class), 200, 200);
                 break;
