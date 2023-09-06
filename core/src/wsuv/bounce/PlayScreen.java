@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PlayScreen extends ScreenAdapter {
-    private enum SubState {READY, GAME_OVER, PLAYING}
+    private enum SubState {READY, DEAD, GAME_OVER, PLAYING}
     private int lives;
     private BounceGame bounceGame;
     private Ball ball;
