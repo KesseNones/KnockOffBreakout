@@ -191,6 +191,7 @@ public class PlayScreen extends ScreenAdapter {
             if (gameHasEnded){
                 lives = 3;
                 gameHasEnded = false;
+                paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
                     bricks[i].resurrect(1 + 1 + (i / 10));
                 }
