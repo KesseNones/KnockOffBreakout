@@ -50,18 +50,26 @@ public class Ball extends Sprite {
     //Used to detect if the ball collided with the paddle.
     public boolean collidedWithPaddle(Paddle pd){
         boolean collided = false;
-        float ballBottomY = getY();
-        float paddleTopY = pd.getY();
-        float ballBottomLeftX = getX();
-        float ballBottomRightX = getX() + getWidth();
+
+        //Used in determining if ball is in x range of paddle.
+        float ballLeftX = getX();
+        float ballRightX = getX() + getWidth();
         float paddleLeftX = pd.getX();
         float paddleRightX = pd.getX() + pd.getWidth();
 
-        if ((ballBottomY > (paddleTopY - 1f)) &&
-                (ballBottomY < (paddleTopY + 1f)) &&
-                ((ballBottomLeftX > paddleLeftX && ballBottomLeftX < paddleRightX) ||
-                        (ballBottomRightX > paddleLeftX && ballBottomRightX < paddleRightX))
-            ){
+        boolean ballInXRange = ((ballLeftX > paddleLeftX) && (ballLeftX < paddleRightX))
+                || ((ballRightX > paddleLeftX) && (ballRightX < paddleRightX));
+
+        //Used in seeing if ball is in y range of paddle.
+        float ballBottomY = getY();
+        float ballTopY = getY() + getHeight();
+        float paddleBottomY = pd.getY();
+        float paddleTopY = pd.getY() + pd.getHeight();
+
+        boolean ballInYRange = ((paddleBottomY > ballBottomY) && (ballBottomY < paddleTopY))
+                || ((ballTopY > paddleBottomY) && (ballTopY < paddleTopY));
+
+        if (ballInXRange && ballInYRange){
             yVelocity *= -1;
             collided = true;
         }
