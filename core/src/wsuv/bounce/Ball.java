@@ -57,14 +57,14 @@ public class Ball extends Sprite {
         float paddleLeftX = pd.getX();
         float paddleRightX = pd.getX() + pd.getWidth();
 
-        boolean ballInXRange = ((ballLeftX > paddleLeftX) && (ballLeftX < paddleRightX))
-                || ((ballRightX > paddleLeftX) && (ballRightX < paddleRightX));
-
         //Used in seeing if ball is in y range of paddle.
         float ballBottomY = getY();
         float ballTopY = getY() + getHeight();
         float paddleBottomY = pd.getY();
         float paddleTopY = pd.getY() + pd.getHeight();
+
+        boolean ballInXRange = ((ballLeftX > paddleLeftX) && (ballLeftX < paddleRightX))
+                || ((ballRightX > paddleLeftX) && (ballRightX < paddleRightX));
 
         boolean ballInYRange = ((paddleBottomY > ballBottomY) && (ballBottomY < paddleTopY))
                 || ((ballTopY > paddleBottomY) && (ballTopY < paddleTopY));
