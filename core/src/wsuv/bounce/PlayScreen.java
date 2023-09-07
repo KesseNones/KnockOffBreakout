@@ -20,7 +20,7 @@ public class PlayScreen extends ScreenAdapter {
     private Brick[] bricks;
     private HUD hud;
     private SubState state;
-    private int bounces;
+    private int level;
     private float timer;
 
     private Sound boomSfx;
@@ -44,7 +44,7 @@ public class PlayScreen extends ScreenAdapter {
             bricks[i] = new Brick(game, 1 + (i / 30), (int)(i / 10), i % 10);
         }
 
-        bounces = 0;
+        level = 1;
         explosions = new ArrayList<>(10);
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
         hitSound = bounceGame.am.get(BounceGame.RSC_HIT_SOUND);
@@ -86,10 +86,10 @@ public class PlayScreen extends ScreenAdapter {
         });
 
         // HUD Data
-        hud.registerView("Bounces:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
+        hud.registerView("Level:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
             @Override
             public String execute(boolean consoleIsOpen) {
-                return Integer.toString(bounces);
+                return Integer.toString(level);
             }
         });
 
@@ -134,7 +134,7 @@ public class PlayScreen extends ScreenAdapter {
     public void show() {
         Gdx.app.log("PlayScreen", "show");
         state = SubState.READY;
-        bounces = 0;
+        level = 1;
     }
 
     public void update(float delta) {
@@ -164,8 +164,6 @@ public class PlayScreen extends ScreenAdapter {
                     bricks[i].collide();
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
-
-                    bounces++;
                 }
             }
 
@@ -178,10 +176,10 @@ public class PlayScreen extends ScreenAdapter {
         if (state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
-            bounces = 0;
             //If the game had ended before, the bricks are reset.
             if (gameHasEnded){
                 lives = 3;
+                level = 1;
                 gameHasEnded = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
