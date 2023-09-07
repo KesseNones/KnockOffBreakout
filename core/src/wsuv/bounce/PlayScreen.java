@@ -36,15 +36,15 @@ public class PlayScreen extends ScreenAdapter {
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
         paddle = new Paddle(game);
+        level = 1;
 
         //Creates a row of ten bricks to be hit with the ball.
         numBricks = 60;
         bricks = new Brick[numBricks];
         for (int i = 0; i < numBricks; i++){
-            bricks[i] = new Brick(game, 1 + (i / 30), (int)(i / 10), i % 10);
+            bricks[i] = new Brick(game, brickHealthMethod(i, level), (int)(i / 10), i % 10);
         }
 
-        level = 1;
         explosions = new ArrayList<>(10);
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
         hitSound = bounceGame.am.get(BounceGame.RSC_HIT_SOUND);
@@ -137,6 +137,11 @@ public class PlayScreen extends ScreenAdapter {
         level = 1;
     }
 
+    //Calculates the health of a given brick based on the current index in bricks and the current level.
+    public int brickHealthMethod(int index, int lvl){
+        int divFactor = 30 - (10 * (lvl - 1));
+        return 1 + (index / divFactor);
+    }
     public void update(float delta) {
         timer += delta;
 
@@ -183,7 +188,7 @@ public class PlayScreen extends ScreenAdapter {
                 gameHasEnded = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
-                    bricks[i].resurrect(1 + 1 + (i / 30));
+                    bricks[i].resurrect(brickHealthMethod(i, level));
                 }
             }
         }
