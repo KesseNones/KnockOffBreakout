@@ -13,9 +13,8 @@
 - **[11]** Add paddle controllable using A and D keys.
 - **[12]** Add basic breakable bricks at near top of screen.
 - **[13]** Add death mechanic with lives and game over.
+- **[14]** Fix collision problem with paddle.
 
 ## Open Issues ##
 
-- **[14]** Fix collision problems with paddle and other elements.
-- **[15]** Add score system to game.
-- **[16]** Add levels to game with scaling difficulty.
+- **[15]** Add levels to game with scaling difficulty.
