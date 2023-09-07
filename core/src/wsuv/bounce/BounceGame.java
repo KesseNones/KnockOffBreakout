@@ -63,6 +63,12 @@ public class BounceGame extends Game {
         am.load(RSC_BALL_IMG, Texture.class);
         am.load(RSC_PADDLE_IMG, Texture.class);
         am.load(RSC_DEFAULT_BRICK_IMG, Texture.class);
+        am.load(RSC_ONE_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_TWO_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_THREE_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_FOUR_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_FIVE_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_SIX_HEALTH_BRICK_IMG, Texture.class);
         am.load(RSC_GAMEOVER_IMG, Texture.class);
         am.load(RSC_DEATH_IMG, Texture.class);
         am.load(RSC_PRESSAKEY_IMG, Texture.class);
