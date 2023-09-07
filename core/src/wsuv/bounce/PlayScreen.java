@@ -24,6 +24,7 @@ public class PlayScreen extends ScreenAdapter {
     private float timer;
 
     private Sound boomSfx;
+    private Sound hitSound;
     private ArrayList<Bang> explosions;
     BangAnimationFrames baf;
 
@@ -40,12 +41,13 @@ public class PlayScreen extends ScreenAdapter {
         numBricks = 60;
         bricks = new Brick[numBricks];
         for (int i = 0; i < numBricks; i++){
-            bricks[i] = new Brick(game, 1 + (i / 10), (int)(i / 10), i % 10);
+            bricks[i] = new Brick(game, 1 + (i / 30), (int)(i / 10), i % 10);
         }
 
         bounces = 0;
         explosions = new ArrayList<>(10);
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
+        hitSound = bounceGame.am.get(BounceGame.RSC_HIT_SOUND);
 
         // we've loaded textures, but the explosion texture isn't quite ready to go--
         // we need to carve it up into frames.  All that work really
@@ -152,13 +154,12 @@ public class PlayScreen extends ScreenAdapter {
 
         // always update the ball, but ignore bounces unless we're in PLAY state
         if (state == SubState.PLAYING) {
-            boolean ballHitWall = ball.update();
+            boolean ballCollidedWithWall = ball.update();
             boolean ballHitPaddle = ball.collidedWithPaddle(paddle);
 
             //Determines if ball has collided with any bricks.
-            boolean ballHitBrick = false;
             for (int i = 0; i < numBricks; i++){
-                ballHitBrick = ball.collidedWithBrick(bricks[i]);
+                boolean ballHitBrick = ball.collidedWithBrick(bricks[i]);
                 if (ballHitBrick) {
                     bricks[i].collide();
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
@@ -168,20 +169,11 @@ public class PlayScreen extends ScreenAdapter {
                 }
             }
 
-            if (ballHitWall || ballHitPaddle || ballHitBrick){
-
-                // fast explosions off walls and other objects.
-                explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
-                boomSfx.play();
-
-                bounces++;
+            //Plays basic hit sound when ball hits wall or paddle.
+            if (ballCollidedWithWall || ballHitPaddle){
+                hitSound.play();
             }
 
-//            if (bounces == 144) {
-//                bounceGame.music.setVolume(bounceGame.music.getVolume() * 2);
-//                state = SubState.GAME_OVER;
-//                timer = 0; // restart the timer.
-//            }
         }
         if (state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
@@ -193,7 +185,7 @@ public class PlayScreen extends ScreenAdapter {
                 gameHasEnded = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
-                    bricks[i].resurrect(1 + 1 + (i / 10));
+                    bricks[i].resurrect(1 + 1 + (i / 30));
                 }
             }
         }
