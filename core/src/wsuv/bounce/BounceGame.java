@@ -26,6 +26,12 @@ public class BounceGame extends Game {
     public static final String RSC_BALL_IMG = "ball.png";
     public static final String RSC_PADDLE_IMG = "paddle.png";
     public static final String RSC_DEFAULT_BRICK_IMG = "defaultBrick.png";
+    public static final String RSC_ONE_HEALTH_BRICK_IMG = "oneHealth.png";
+    public static final String RSC_TWO_HEALTH_BRICK_IMG = "twoHealth.png";
+    public static final String RSC_THREE_HEALTH_BRICK_IMG = "threeHealth.png";
+    public static final String RSC_FOUR_HEALTH_BRICK_IMG = "fourHealth.png";
+    public static final String RSC_FIVE_HEALTH_BRICK_IMG = "fiveHealth.png";
+    public static final String RSC_SIX_HEALTH_BRICK_IMG = "sixHealth.png";
     public static final String RSC_MONO_FONT_FILE = "JetBrainsMono-Regular.ttf";
     public static final String RSC_MONO_FONT = "JBM.ttf";
     public static final String RSC_EXPLOSION_SFX = "explosion7s.wav";
