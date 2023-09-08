@@ -10,13 +10,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PlayScreen extends ScreenAdapter {
-    private enum SubState {READY, DEAD, GAME_OVER, PLAYING}
+    private enum SubState {READY, DEAD, GAME_OVER, PLAYING, LEVEL_WON, GAME_VICTORY}
     private boolean gameHasEnded;
+    private boolean wonLevel;
     private int lives;
     private BounceGame bounceGame;
     private Ball ball;
     private Paddle paddle;
     private int numBricks;
+    private int aliveBricks;
     private Brick[] bricks;
     private HUD hud;
     private SubState state;
@@ -32,6 +34,7 @@ public class PlayScreen extends ScreenAdapter {
         timer = 0;
         lives = 3;
         gameHasEnded = false;
+        wonLevel = false;
         bounceGame = game;
         hud = new HUD(bounceGame.am.get(BounceGame.RSC_MONO_FONT));
         ball = new Ball(game);
@@ -40,6 +43,7 @@ public class PlayScreen extends ScreenAdapter {
 
         //Creates a row of ten bricks to be hit with the ball.
         numBricks = 60;
+        aliveBricks = numBricks;
         bricks = new Brick[numBricks];
         for (int i = 0; i < numBricks; i++){
             bricks[i] = new Brick(game, brickHealthMethod(i, level), (int)(i / 10), i % 10);
@@ -168,8 +172,14 @@ public class PlayScreen extends ScreenAdapter {
                 boolean ballHitBrick = ball.collidedWithBrick(bricks[i]);
                 if (ballHitBrick) {
                     bricks[i].collide();
+                    aliveBricks--;
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
+                    if (aliveBricks < 1){
+                        state = SubState.LEVEL_WON;
+                        wonLevel = true;
+                        timer = 0;
+                    }
                 }
             }
 
@@ -191,6 +201,17 @@ public class PlayScreen extends ScreenAdapter {
                 for (int i = 0; i < numBricks; i++){
                     bricks[i].resurrect(brickHealthMethod(i, level));
                 }
+                aliveBricks = numBricks;
+            }
+            if (wonLevel){
+                level++;
+                wonLevel = false;
+                paddle = new Paddle(bounceGame);
+                for (int i = 0; i < numBricks; i++){
+                    bricks[i].resurrect(brickHealthMethod(i, level));
+                }
+                aliveBricks = numBricks;
+
             }
         }
         if (state == SubState.DEAD && timer > 3.0f) {
@@ -203,8 +224,13 @@ public class PlayScreen extends ScreenAdapter {
             state = SubState.READY;
         }
 
+        if (state == SubState.LEVEL_WON && timer > 3f){
+            ball = new Ball(bounceGame);
+            state = SubState.READY;
+        }
+
         // ignore key presses when console is open and when game is over...
-        if (!hud.isOpen() && (state != SubState.GAME_OVER && state != SubState.DEAD)) {
+        if (!hud.isOpen() && state == SubState.PLAYING) {
             //FUNTIONALITY MIGHT RETURN TO W AND S KEYS
 //            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
 //                ball.yVelocity += 2;
@@ -252,6 +278,9 @@ public class PlayScreen extends ScreenAdapter {
                 break;
             case GAME_OVER:
                 bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_GAMEOVER_IMG, Texture.class), 200, 200);
+                break;
+            case LEVEL_WON:
+                bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_LEVEL_WIN_IMG, Texture.class), 200, 200);
                 break;
             case READY:
                 bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_PRESSAKEY_IMG, Texture.class), 200, 200);
