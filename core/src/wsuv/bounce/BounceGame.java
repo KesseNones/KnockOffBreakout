@@ -23,6 +23,7 @@ public class BounceGame extends Game {
     public static final String RSC_GAMEOVER_IMG = "gameover.png";
     public static final String RSC_DEATH_IMG = "deathMessage.png";
     public static final String RSC_LEVEL_WIN_IMG = "levelVictoryMessage.png";
+    public static final String RSC_GAME_VICTORY_IMG = "gameWinMessage.png";
     public static final String RSC_PRESSAKEY_IMG = "pressakey.png";
     public static final String RSC_BALL_IMG = "ball.png";
     public static final String RSC_PADDLE_IMG = "paddle.png";
@@ -73,6 +74,7 @@ public class BounceGame extends Game {
         am.load(RSC_GAMEOVER_IMG, Texture.class);
         am.load(RSC_DEATH_IMG, Texture.class);
         am.load(RSC_LEVEL_WIN_IMG, Texture.class);
+        am.load(RSC_GAME_VICTORY_IMG, Texture.class);
         am.load(RSC_PRESSAKEY_IMG, Texture.class);
         am.load(RSC_EXPLOSION_FRAMES, Texture.class);
 
