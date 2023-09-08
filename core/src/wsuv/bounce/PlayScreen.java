@@ -143,30 +143,6 @@ public class PlayScreen extends ScreenAdapter {
         return 1 + (index / divFactor);
     }
 
-    private String brickTextureStringMethod(int health){
-        String textureName;
-        switch (health){
-            case 1:
-                textureName = "oneHealth.png";
-                break;
-            case 2:
-                textureName = "twoHealth.png";
-                break;
-            case 3:
-                textureName = "threeHealth.png";
-            case 4:
-                textureName = "fourHealth.png";
-            case 5:
-                textureName = "fiveHealth.png";
-            case 6:
-                textureName = "sixHealth.png";
-            default:
-                textureName = "defaultBrick.png";
-                break;
-        }
-        return textureName;
-    }
-
     public void update(float delta) {
         timer += delta;
 
