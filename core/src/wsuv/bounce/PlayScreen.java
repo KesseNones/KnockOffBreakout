@@ -211,8 +211,8 @@ public class PlayScreen extends ScreenAdapter {
             if (wonLevel){
                 level++;
                 //Increases ball speed based on level amount.
-                ball.xVelocity = (ball.xVelocity - 150f) * 1.2f * level + 150f;
-                ball.yVelocity = (ball.yVelocity - 150f) * 1.2f * level + 150f;
+                ball.xVelocity = (ball.xVelocity - 150f) * level + 150f;
+                ball.yVelocity = (ball.yVelocity - 150f) * level + 150f;
                 wonLevel = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
