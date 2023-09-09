@@ -208,11 +208,10 @@ public class PlayScreen extends ScreenAdapter {
             }
 
         }
-        if (state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
+        if (!hud.isOpen() && state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             //If the game had ended before, the bricks are reset.
-
 
             if (gameHasEnded){
                 lives = 3;
