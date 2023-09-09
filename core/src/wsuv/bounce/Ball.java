@@ -3,21 +3,23 @@ package wsuv.bounce;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import java.util.Vector;
 
 
 public class Ball extends Sprite {
 
-    float xVelocity;
-    float yVelocity;
+    Vector2 velocityVector;
 
     public Ball(BounceGame game) {
         super(game.am.get("ball.png", Texture.class));
         setSize(32f, 32f); //MAY BE UNDONE LATER
 
-        xVelocity = (game.random.nextFloat() * 70f) + 150f;
-        yVelocity = (game.random.nextFloat() * 70f) + 150f;
+        float xVelocity = (game.random.nextFloat() * 70f) + 150f;
+        float yVelocity = (game.random.nextFloat() * 70f) + 150f;
         if (game.random.nextBoolean()) xVelocity *= -1;
         if (game.random.nextBoolean()) yVelocity *= -1;
+        velocityVector = new Vector2(xVelocity, yVelocity);
         setCenter(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
     }
 
@@ -33,16 +35,16 @@ public class Ball extends Sprite {
         boolean bounced = false;
 
         if ( (getY() >= 0) && (x < 0 || (x + getWidth()) > Gdx.graphics.getWidth()) ) {
-            xVelocity *= -1;
+            velocityVector.x *= -1;
             bounced = true;
         }
         if ((y + getHeight()) > Gdx.graphics.getHeight()) {
-            yVelocity *= -1;
+            velocityVector.y *= -1;
             bounced = true;
         }
         float time = Gdx.graphics.getDeltaTime();
-        setX(x + time * xVelocity);
-        setY(y + time * yVelocity);
+        setX(x + time * velocityVector.x);
+        setY(y + time * velocityVector.y);
 
         return bounced;
     }
@@ -68,7 +70,7 @@ public class Ball extends Sprite {
 
         collided = (leftEdgeInXRange || rightEdgeInXRange) && (topEdgeInYRange || bottomEdgeInYRange);
 
-        if (collided) {yVelocity *= -1;}
+        if (collided) {velocityVector.y *= -1;}
 
         return collided;
     }
@@ -99,7 +101,7 @@ public class Ball extends Sprite {
 
         collided = (leftEdgeInXRange || rightEdgeInXRange) && (topEdgeInYRange || bottomEdgeInYRange);
 
-        if (collided) {yVelocity *= -1;}
+        if (collided) {velocityVector.y *= -1;}
 
         return collided;
     }

@@ -75,8 +75,8 @@ public class PlayScreen extends ScreenAdapter {
                     float y = Float.parseFloat(cmd[2]);
                     float vx = Float.parseFloat(cmd[3]);
                     float vy = Float.parseFloat(cmd[4]);
-                    ball.xVelocity = vx;
-                    ball.yVelocity = vy;
+                    ball.velocityVector.x = vx;
+                    ball.velocityVector.y = vy;
                     ball.setCenter(x, y);
                     return "ok!";
                 } catch (Exception e) {
@@ -107,7 +107,7 @@ public class PlayScreen extends ScreenAdapter {
             @Override
             public String execute(boolean consoleIsOpen) {
                 return String.format("%.0f %.0f [%.0f %.0f] (%d)",
-                        ball.getX(), ball.getY(), ball.xVelocity, ball.yVelocity, explosions.size());
+                        ball.getX(), ball.getY(), ball.velocityVector.x, ball.velocityVector.y, explosions.size());
             }
         });
 
@@ -211,8 +211,8 @@ public class PlayScreen extends ScreenAdapter {
             if (wonLevel){
                 level++;
                 //Increases ball speed based on level amount.
-                ball.xVelocity = (ball.xVelocity - 150f) * level + 150f;
-                ball.yVelocity = (ball.yVelocity - 150f) * level + 150f;
+                ball.velocityVector.x = (ball.velocityVector.x - 150f) * level + 150f;
+                ball.velocityVector.y = (ball.velocityVector.y - 150f) * level + 150f;
                 wonLevel = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
