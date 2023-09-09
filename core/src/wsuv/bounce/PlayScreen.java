@@ -190,7 +190,6 @@ public class PlayScreen extends ScreenAdapter {
                 if (bricks[i].doesSpriteExist()){brickCount++;}
             }
             aliveBricks = brickCount;
-            System.out.println(aliveBricks);
 
             if (aliveBricks < 1){
                 if (level > 2){
