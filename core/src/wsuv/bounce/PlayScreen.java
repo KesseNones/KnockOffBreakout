@@ -182,17 +182,25 @@ public class PlayScreen extends ScreenAdapter {
                     aliveBricks--;
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
-                    if (aliveBricks < 1){
-                        if (level > 2){
-                            state = SubState.GAME_VICTORY;
-                            gameHasEnded = true;
-                        }else{
-                            state = SubState.LEVEL_WON;
-                            wonLevel = true;
-                        }
-                        timer = 0;
-                    }
                 }
+            }
+
+            int brickCount = 0;
+            for (int i = 0; i < numBricks ; i++){
+                if (bricks[i].doesSpriteExist()){brickCount++;}
+            }
+            aliveBricks = brickCount;
+            System.out.println(aliveBricks);
+
+            if (aliveBricks < 1){
+                if (level > 2){
+                    state = SubState.GAME_VICTORY;
+                    gameHasEnded = true;
+                }else{
+                    state = SubState.LEVEL_WON;
+                    wonLevel = true;
+                }
+                timer = 0;
             }
 
             //Plays basic hit sound when ball hits wall or paddle.
