@@ -89,6 +89,26 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        //Cheat command that adds one life to the player's life counter,
+        // giving them more room to fail.
+        hud.registerAction("addLife", new HUDActionCommand() {
+            static final String assist = "Adds life to lives.";
+
+            @Override
+            public String execute(String[] cmd) {
+                if (cmd[0].equals("addLife") || cmd[0].equals("addLife\n")){
+                    lives++;
+                    return "Life added";
+                }else{
+                    return assist;
+                }
+            }
+
+            public String help(String[] cmd){
+                return assist;
+            }
+        });
+
         // HUD Data
         hud.registerView("Level:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
             @Override
