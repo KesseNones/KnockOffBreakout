@@ -42,7 +42,7 @@ public class PlayScreen extends ScreenAdapter {
         level = 1;
 
         //Creates a row of ten bricks to be hit with the ball.
-        numBricks = 60;
+        numBricks = 1;
         aliveBricks = numBricks;
         bricks = new Brick[numBricks];
         for (int i = 0; i < numBricks; i++){
@@ -210,6 +210,9 @@ public class PlayScreen extends ScreenAdapter {
             }
             if (wonLevel){
                 level++;
+                //Increases ball speed based on level amount.
+                ball.xVelocity = (ball.xVelocity - 150f) * 1.2f * level + 150f;
+                ball.yVelocity = (ball.yVelocity - 150f) * 1.2f * level + 150f;
                 wonLevel = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
