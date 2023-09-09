@@ -205,6 +205,8 @@ public class PlayScreen extends ScreenAdapter {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             //If the game had ended before, the bricks are reset.
+
+
             if (gameHasEnded){
                 lives = 3;
                 level = 1;
@@ -217,9 +219,6 @@ public class PlayScreen extends ScreenAdapter {
             }
             if (wonLevel){
                 level++;
-                //Increases ball speed based on level amount.
-                ball.velocityVector.x = (ball.velocityVector.x - 150f) * level + 150f;
-                ball.velocityVector.y = (ball.velocityVector.y - 150f) * level + 150f;
                 wonLevel = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
@@ -228,6 +227,12 @@ public class PlayScreen extends ScreenAdapter {
                 aliveBricks = numBricks;
 
             }
+
+            //Increases ball speed based on level amount.
+            ball.velocityVector.x = (ball.velocityVector.x - 200f) *
+                    (float) (Math.pow( (1.2f) , ((float) level - 1) )) + 200f;
+            ball.velocityVector.y = (ball.velocityVector.y - 200f) *
+                    (float) (Math.pow( (1.2f) , ((float) level -  1) )) + 200f;
         }
 
         if (state != SubState.PLAYING && timer > 5f){
