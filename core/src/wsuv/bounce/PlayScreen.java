@@ -42,7 +42,7 @@ public class PlayScreen extends ScreenAdapter {
         level = 1;
 
         //Creates a row of ten bricks to be hit with the ball.
-        numBricks = 1;
+        numBricks = 60;
         aliveBricks = numBricks;
         bricks = new Brick[numBricks];
         for (int i = 0; i < numBricks; i++){
