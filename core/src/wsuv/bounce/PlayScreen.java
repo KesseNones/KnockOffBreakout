@@ -75,8 +75,8 @@ public class PlayScreen extends ScreenAdapter {
                     float y = Float.parseFloat(cmd[2]);
                     float vx = Float.parseFloat(cmd[3]);
                     float vy = Float.parseFloat(cmd[4]);
-                    ball.xVelocity = vx;
-                    ball.yVelocity = vy;
+                    ball.velocityVector.x = vx;
+                    ball.velocityVector.y = vy;
                     ball.setCenter(x, y);
                     return "ok!";
                 } catch (Exception e) {
@@ -107,7 +107,7 @@ public class PlayScreen extends ScreenAdapter {
             @Override
             public String execute(boolean consoleIsOpen) {
                 return String.format("%.0f %.0f [%.0f %.0f] (%d)",
-                        ball.getX(), ball.getY(), ball.xVelocity, ball.yVelocity, explosions.size());
+                        ball.getX(), ball.getY(), ball.velocityVector.x, ball.velocityVector.y, explosions.size());
             }
         });
 
@@ -165,27 +165,41 @@ public class PlayScreen extends ScreenAdapter {
         // always update the ball, but ignore bounces unless we're in PLAY state
         if (state == SubState.PLAYING) {
             boolean ballCollidedWithWall = ball.update();
-            boolean ballHitPaddle = ball.collidedWithPaddle(paddle);
+            boolean ballHitPaddle = ball.collidedWithObject(paddle);
 
             //Determines if ball has collided with any bricks.
             for (int i = 0; i < numBricks; i++){
-                boolean ballHitBrick = ball.collidedWithBrick(bricks[i]);
+                boolean ballHitBrick;
+                //If a brick exists that could be hit, check to see if the ball actually hit it.
+                if (bricks[i].doesSpriteExist()){
+                    ballHitBrick = ball.collidedWithObject(bricks[i]);
+                }else {
+                    ballHitBrick = false;
+                }
+
                 if (ballHitBrick) {
                     bricks[i].collide();
                     aliveBricks--;
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
-                    if (aliveBricks < 1){
-                        if (level > 2){
-                            state = SubState.GAME_VICTORY;
-                            gameHasEnded = true;
-                        }else{
-                            state = SubState.LEVEL_WON;
-                            wonLevel = true;
-                        }
-                        timer = 0;
-                    }
                 }
+            }
+
+            int brickCount = 0;
+            for (int i = 0; i < numBricks ; i++){
+                if (bricks[i].doesSpriteExist()){brickCount++;}
+            }
+            aliveBricks = brickCount;
+
+            if (aliveBricks < 1){
+                if (level > 2){
+                    state = SubState.GAME_VICTORY;
+                    gameHasEnded = true;
+                }else{
+                    state = SubState.LEVEL_WON;
+                    wonLevel = true;
+                }
+                timer = 0;
             }
 
             //Plays basic hit sound when ball hits wall or paddle.
@@ -198,6 +212,8 @@ public class PlayScreen extends ScreenAdapter {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             //If the game had ended before, the bricks are reset.
+
+
             if (gameHasEnded){
                 lives = 3;
                 level = 1;
@@ -210,9 +226,6 @@ public class PlayScreen extends ScreenAdapter {
             }
             if (wonLevel){
                 level++;
-                //Increases ball speed based on level amount.
-                ball.xVelocity = (ball.xVelocity - 150f) * level + 150f;
-                ball.yVelocity = (ball.yVelocity - 150f) * level + 150f;
                 wonLevel = false;
                 paddle = new Paddle(bounceGame);
                 for (int i = 0; i < numBricks; i++){
@@ -221,6 +234,12 @@ public class PlayScreen extends ScreenAdapter {
                 aliveBricks = numBricks;
 
             }
+
+            //Increases ball speed based on level amount.
+            ball.velocityVector.x = (ball.velocityVector.x - 200f) *
+                    (float) (Math.pow( (1.2f) , ((float) level - 1) )) + 200f;
+            ball.velocityVector.y = (ball.velocityVector.y - 200f) *
+                    (float) (Math.pow( (1.2f) , ((float) level -  1) )) + 200f;
         }
 
         if (state != SubState.PLAYING && timer > 5f){
