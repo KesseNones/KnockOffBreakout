@@ -165,11 +165,18 @@ public class PlayScreen extends ScreenAdapter {
         // always update the ball, but ignore bounces unless we're in PLAY state
         if (state == SubState.PLAYING) {
             boolean ballCollidedWithWall = ball.update();
-            boolean ballHitPaddle = ball.collidedWithPaddle(paddle);
+            boolean ballHitPaddle = ball.collidedWithObject(paddle);
 
             //Determines if ball has collided with any bricks.
             for (int i = 0; i < numBricks; i++){
-                boolean ballHitBrick = ball.collidedWithBrick(bricks[i]);
+                boolean ballHitBrick;
+                //If a brick exists that could be hit, check to see if the ball actually hit it.
+                if (bricks[i].doesSpriteExist()){
+                    ballHitBrick = ball.collidedWithObject(bricks[i]);
+                }else {
+                    ballHitBrick = false;
+                }
+
                 if (ballHitBrick) {
                     bricks[i].collide();
                     aliveBricks--;

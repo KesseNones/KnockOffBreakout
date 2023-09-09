@@ -3,6 +3,7 @@ package wsuv.bounce;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import java.util.Vector;
 
@@ -35,11 +36,12 @@ public class Ball extends Sprite {
         boolean bounced = false;
 
         if ( (getY() >= 0) && (x < 0 || (x + getWidth()) > Gdx.graphics.getWidth()) ) {
-            velocityVector.x *= -1;
+            velocityVector.x = Math.abs(velocityVector.x);
+            if ((x + getWidth()) > Gdx.graphics.getWidth()){velocityVector.x *= -1;}
             bounced = true;
         }
         if ((y + getHeight()) > Gdx.graphics.getHeight()) {
-            velocityVector.y *= -1;
+            velocityVector.y = Math.abs(velocityVector.y) * -1;
             bounced = true;
         }
         float time = Gdx.graphics.getDeltaTime();
@@ -47,6 +49,49 @@ public class Ball extends Sprite {
         setY(y + time * velocityVector.y);
 
         return bounced;
+    }
+
+    //A generalized method that detects collisions with of a ball with a sprite.
+    public boolean collidedWithObject(Sprite s){
+        Rectangle spriteRectangle = s.getBoundingRectangle();
+        Rectangle ballRectangle = getBoundingRectangle();
+        double tau = Math.PI * 2;
+        if (spriteRectangle.overlaps(ballRectangle)){
+            Vector2 spriteCenterVec = new Vector2(0, 0);
+            Vector2 ballCenterVec = new Vector2(0, 0);
+            spriteRectangle.getCenter(spriteCenterVec);
+            ballRectangle.getCenter(ballCenterVec);
+
+            Vector2 collisionVector = ballCenterVec.sub(spriteCenterVec);
+            float collisionAngle = collisionVector.angleRad();
+            velocityVector.setAngleRad(collisionAngle);
+//            double firstQuadrantAngle = Math.atan(s.getHeight() / s.getWidth());
+//            double complementAngle = (tau / 2) - firstQuadrantAngle;
+
+//            //Right edge collision case.
+//            if (collisionAngle > 0 && collisionAngle < firstQuadrantAngle) {
+//                velocityVector.x = Math.abs(velocityVector.x) * -1;
+//            }
+//
+//            //Top edge collision case.
+//            if (collisionAngle > firstQuadrantAngle && collisionAngle < complementAngle ){
+//                velocityVector.y = Math.abs(velocityVector.y);
+//            }
+//
+//            //Left edge collision case.
+//            if (collisionAngle > complementAngle && collisionAngle < (complementAngle + firstQuadrantAngle)){
+//                velocityVector.x = Math.abs(velocityVector.x) * -1;
+//            }
+//
+//            //Bottom edge collision case.
+//            if (collisionAngle > (complementAngle + firstQuadrantAngle)
+//                    && collisionAngle < (2 * complementAngle + firstQuadrantAngle)){
+//                velocityVector.y = Math.abs(velocityVector.y);
+//            }
+
+            return true;
+        }
+        return false;
     }
 
     //Used to detect if the ball collided with the paddle.
