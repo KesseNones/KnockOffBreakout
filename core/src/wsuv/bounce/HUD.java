@@ -100,7 +100,7 @@ public class HUD {
 
         // make a background for the console...bigger than needed!
         Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
-        pixmap.setColor(1, 1, 1, .6f);
+        pixmap.setColor(0, 0, 0, .8f);
         pixmap.fill();
         background = new Texture(pixmap);
         pixmap.dispose();
