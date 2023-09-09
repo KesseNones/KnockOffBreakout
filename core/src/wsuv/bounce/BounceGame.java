@@ -22,10 +22,18 @@ public class BounceGame extends Game {
     public static final String RSC_EXPLOSION_FRAMES = "explosion8x8.png";
     public static final String RSC_GAMEOVER_IMG = "gameover.png";
     public static final String RSC_DEATH_IMG = "deathMessage.png";
+    public static final String RSC_LEVEL_WIN_IMG = "levelVictoryMessage.png";
+    public static final String RSC_GAME_VICTORY_IMG = "gameWinMessage.png";
     public static final String RSC_PRESSAKEY_IMG = "pressakey.png";
     public static final String RSC_BALL_IMG = "ball.png";
     public static final String RSC_PADDLE_IMG = "paddle.png";
     public static final String RSC_DEFAULT_BRICK_IMG = "defaultBrick.png";
+    public static final String RSC_ONE_HEALTH_BRICK_IMG = "oneHealth.png";
+    public static final String RSC_TWO_HEALTH_BRICK_IMG = "twoHealth.png";
+    public static final String RSC_THREE_HEALTH_BRICK_IMG = "threeHealth.png";
+    public static final String RSC_FOUR_HEALTH_BRICK_IMG = "fourHealth.png";
+    public static final String RSC_FIVE_HEALTH_BRICK_IMG = "fiveHealth.png";
+    public static final String RSC_SIX_HEALTH_BRICK_IMG = "sixHealth.png";
     public static final String RSC_MONO_FONT_FILE = "JetBrainsMono-Regular.ttf";
     public static final String RSC_MONO_FONT = "JBM.ttf";
     public static final String RSC_EXPLOSION_SFX = "explosion7s.wav";
@@ -57,8 +65,16 @@ public class BounceGame extends Game {
         am.load(RSC_BALL_IMG, Texture.class);
         am.load(RSC_PADDLE_IMG, Texture.class);
         am.load(RSC_DEFAULT_BRICK_IMG, Texture.class);
+        am.load(RSC_ONE_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_TWO_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_THREE_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_FOUR_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_FIVE_HEALTH_BRICK_IMG, Texture.class);
+        am.load(RSC_SIX_HEALTH_BRICK_IMG, Texture.class);
         am.load(RSC_GAMEOVER_IMG, Texture.class);
         am.load(RSC_DEATH_IMG, Texture.class);
+        am.load(RSC_LEVEL_WIN_IMG, Texture.class);
+        am.load(RSC_GAME_VICTORY_IMG, Texture.class);
         am.load(RSC_PRESSAKEY_IMG, Texture.class);
         am.load(RSC_EXPLOSION_FRAMES, Texture.class);
 

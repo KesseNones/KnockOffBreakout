@@ -14,7 +14,11 @@
 - **[12]** Add basic breakable bricks at near top of screen.
 - **[13]** Add death mechanic with lives and game over.
 - **[14]** Fix collision problem with paddle.
+- **[15]** Add levels to game with scaling difficulty.
 
 ## Open Issues ##
 
-- **[15]** Add levels to game with scaling difficulty.
+- **[16]** Improve collision for ball and other elements.
+- **[17]** Add various cheat codes and rework terminal a little.
+- **[18]** Add splash screen.
+- **[19]** Add more custom sounds and assets.
