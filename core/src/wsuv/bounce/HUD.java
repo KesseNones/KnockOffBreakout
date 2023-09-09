@@ -166,7 +166,7 @@ public class HUD {
                             consoleLines.removeFirst();
                         }
                         currentLine.setLength(0);
-                    } else if (character == '\b') {
+                    } else if (character == '\b' && currentLine.length() > 0) {
                         currentLine.setLength(currentLine.length() - 1);
                     } else {
                         currentLine.append(character);
