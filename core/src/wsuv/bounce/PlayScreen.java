@@ -176,8 +176,13 @@ public class PlayScreen extends ScreenAdapter {
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
                     if (aliveBricks < 1){
-                        state = SubState.LEVEL_WON;
-                        wonLevel = true;
+                        if (level > 2){
+                            state = SubState.GAME_VICTORY;
+                            gameHasEnded = true;
+                        }else{
+                            state = SubState.LEVEL_WON;
+                            wonLevel = true;
+                        }
                         timer = 0;
                     }
                 }
@@ -214,30 +219,15 @@ public class PlayScreen extends ScreenAdapter {
 
             }
         }
-        if (state == SubState.DEAD && timer > 3.0f) {
-            ball = new Ball(bounceGame);
-            state = SubState.READY;
-        }
 
-        if (state == SubState.GAME_OVER && timer > 5f){
+        if (state != SubState.PLAYING && timer > 5f){
             ball = new Ball(bounceGame);
-            state = SubState.READY;
-        }
-
-        if (state == SubState.LEVEL_WON && timer > 3f){
-            ball = new Ball(bounceGame);
+            paddle = new Paddle(bounceGame);
             state = SubState.READY;
         }
 
         // ignore key presses when console is open and when game is over...
         if (!hud.isOpen() && state == SubState.PLAYING) {
-            //FUNTIONALITY MIGHT RETURN TO W AND S KEYS
-//            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-//                ball.yVelocity += 2;
-//            }
-//            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-//                ball.yVelocity -= 2;
-//            }
             //Moves paddle to the left until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 if (paddle.getX() > 0f){
@@ -281,6 +271,9 @@ public class PlayScreen extends ScreenAdapter {
                 break;
             case LEVEL_WON:
                 bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_LEVEL_WIN_IMG, Texture.class), 200, 200);
+                break;
+            case GAME_VICTORY:
+                bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_GAME_VICTORY_IMG, Texture.class), 200, 200);
                 break;
             case READY:
                 bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_PRESSAKEY_IMG, Texture.class), 200, 200);
