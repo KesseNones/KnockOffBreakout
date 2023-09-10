@@ -148,6 +148,21 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        hud.registerAction("lose", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter the losing state and lose a life.";
+
+            @Override
+            public String execute(String[] cmd) {
+                godModeEnabled = false;
+                ball.setCenter(400, -9999);
+                return "You lost!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
         // HUD Data
         hud.registerView("Level:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
             @Override
