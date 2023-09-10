@@ -63,7 +63,7 @@ public class Brick extends Sprite {
     //Destroys a brick due to the ball.
     public boolean collide(){
         health--;
-        spriteExists = health > 1;
+        spriteExists = health > 0;
         if (spriteExists){setTexture(findTextureBasedOnHealth(health));}
         return spriteExists;
     }
