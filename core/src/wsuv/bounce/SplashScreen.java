@@ -31,9 +31,10 @@ public class SplashScreen extends ScreenAdapter {
             bounceGame.setScreen(new LoadScreen(bounceGame));
         }
         bounceGame.batch.begin();
-        if (bounceGame.am.isLoaded(bounceGame.RSC_DEATH_IMG, Texture.class)){
-            bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_DEATH_IMG, Texture.class), 200, 250);
+        if (bounceGame.am.isLoaded(bounceGame.RSC_SPLASH_TEXT_IMG, Texture.class)){
+            bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_SPLASH_TEXT_IMG, Texture.class), 200, 250);
         }
+        //bounceGame.batch.setColor(1, 1, 1, 0.5f); //POTENTIAL
         bounceGame.batch.end();
 
     }
