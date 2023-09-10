@@ -55,6 +55,11 @@ public class Brick extends Sprite {
         return new Texture(textureName);
     }
 
+    public void DESTROY(){
+        health = 0;
+        spriteExists = false;
+    }
+
     //Destroys a brick due to the ball.
     public boolean collide(){
         health--;
