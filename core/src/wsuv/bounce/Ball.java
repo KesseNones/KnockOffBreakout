@@ -42,6 +42,9 @@ public class Ball extends Sprite {
             velocityVector.y = Math.abs(velocityVector.y) * -1;
             bounced = true;
         }
+        if (y < 0){
+            velocityVector.y = Math.abs(velocityVector.y);
+        }
         float time = Gdx.graphics.getDeltaTime();
         setX(x + time * velocityVector.x);
         setY(y + time * velocityVector.y);

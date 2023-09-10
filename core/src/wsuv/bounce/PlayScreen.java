@@ -24,6 +24,7 @@ public class PlayScreen extends ScreenAdapter {
     private SubState state;
     private int level;
     private float timer;
+    private boolean godModeEnabled;
 
     private Sound boomSfx;
     private Sound hitSound;
@@ -31,6 +32,7 @@ public class PlayScreen extends ScreenAdapter {
     BangAnimationFrames baf;
 
     public PlayScreen(BounceGame game) {
+        godModeEnabled = false;
         timer = 0;
         lives = 3;
         gameHasEnded = false;
@@ -91,21 +93,37 @@ public class PlayScreen extends ScreenAdapter {
 
         //Cheat command that adds one life to the player's life counter,
         // giving them more room to fail.
-        hud.registerAction("addLife", new HUDActionCommand() {
-            static final String assist = "Adds life to lives.";
+        hud.registerAction("addlife", new HUDActionCommand() {
+            static final String desc = "Adds life to lives.";
 
             @Override
             public String execute(String[] cmd) {
-                if (cmd[0].equals("addLife") || cmd[0].equals("addLife\n")){
-                    lives++;
-                    return "Life added";
-                }else{
-                    return assist;
-                }
+                lives++;
+                return "Life Added";
             }
 
             public String help(String[] cmd){
-                return assist;
+                return desc;
+            }
+        });
+
+        hud.registerAction("godmode", new HUDActionCommand() {
+            static final String desc = "Makes ball hitting the bottom not kill player.";
+
+            @Override
+            public String execute(String[] cmd) {
+                String godString;
+                godModeEnabled = !godModeEnabled;
+                if (godModeEnabled){
+                    godString = "God Mode Enabled";
+                }else{
+                    godString = "God Mode Disabled";
+                }
+                return godString;
+            }
+
+            public String help(String[] cmd){
+                return desc;
             }
         });
 
@@ -171,7 +189,7 @@ public class PlayScreen extends ScreenAdapter {
         timer += delta;
 
         //Detects if ball goes below bottom of screen, indicating death.
-        if (state == SubState.PLAYING && ball.getY() < 0){
+        if (state == SubState.PLAYING && ball.getY() < 0 && !godModeEnabled){
             lives--;
             timer = 0;
             if (lives > 0){
