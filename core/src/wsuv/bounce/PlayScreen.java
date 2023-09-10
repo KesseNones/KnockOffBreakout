@@ -32,6 +32,7 @@ public class PlayScreen extends ScreenAdapter {
     BangAnimationFrames baf;
 
     public PlayScreen(BounceGame game) {
+        game.batch.setColor(1, 1, 1, 1);
         godModeEnabled = false;
         timer = 0;
         lives = 3;
