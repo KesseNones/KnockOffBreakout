@@ -128,7 +128,7 @@ public class PlayScreen extends ScreenAdapter {
         });
 
         hud.registerAction("winlevel", new HUDActionCommand() {
-            static final String desc = "Explodes all remaining bricks and wins the level for the player.";
+            static final String desc = "Explodes all remaining bricks \nand wins the level for the player.";
 
             @Override
             public String execute(String[] cmd) {
@@ -149,13 +149,29 @@ public class PlayScreen extends ScreenAdapter {
         });
 
         hud.registerAction("lose", new HUDActionCommand() {
-            static final String desc = "Causes the player to instantly enter the losing state and lose a life.";
+            static final String desc = "Causes the player to instantly enter the losing state\n and lose a life.";
 
             @Override
             public String execute(String[] cmd) {
                 godModeEnabled = false;
                 ball.setCenter(400, -9999);
                 return "You lost!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        //This stops the entire game process. As a result,
+        // it may need to be removed later if deemed too dangerous.
+        hud.registerAction("exit", new HUDActionCommand() {
+            static final String desc = "Exits the game entirely.";
+
+            @Override
+            public String execute(String[] cmd) {
+                Gdx.app.exit();
+                return "Goodbye!";
             }
 
             public String help(String[] cmd){
