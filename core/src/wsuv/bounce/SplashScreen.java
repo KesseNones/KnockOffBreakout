@@ -34,7 +34,7 @@ public class SplashScreen extends ScreenAdapter {
         if (bounceGame.am.isLoaded(bounceGame.RSC_SPLASH_TEXT_IMG, Texture.class)){
             bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_SPLASH_TEXT_IMG, Texture.class), 200, 250);
         }
-        //bounceGame.batch.setColor(1, 1, 1, 0.5f); //POTENTIAL
+        bounceGame.batch.setColor(1, 1, 1, (float)timer / 180f); //POTENTIAL
         bounceGame.batch.end();
 
     }
