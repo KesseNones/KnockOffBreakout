@@ -51,7 +51,7 @@ public class LoadScreen extends ScreenAdapter {
             // at a fixed rate per frame until all credits are off screen
             // then we'll switch to the playing state.
             bounceGame.batch.begin();
-            float y = 300;
+            float y = 400;
             float lineHeight = font.getLineHeight();
             font.draw(bounceGame.batch, "Thanks to...", 200f, y + 2 * lineHeight);
 
