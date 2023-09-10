@@ -83,7 +83,7 @@ public class BounceGame extends Game {
         am.load(RSC_HIT_SOUND, Sound.class);
 
         batch = new SpriteBatch();
-        setScreen(new LoadScreen(this));
+        setScreen(new SplashScreen(this));
 
         // start the music right away.
         // this one we'll only reference via the GameInstance, and it's streamed
