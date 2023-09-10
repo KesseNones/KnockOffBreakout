@@ -269,9 +269,14 @@ public class PlayScreen extends ScreenAdapter {
                 }
 
                 if (ballHitBrick) {
-                    bricks[i].collide();
-                    explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
-                    boomSfx.play();
+                    boolean stillAlive = bricks[i].collide();
+                    if (stillAlive){
+                        hitSound.play();
+                    }else{
+                        explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                        boomSfx.play();
+                    }
+
                 }
             }
 
