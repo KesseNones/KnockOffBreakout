@@ -158,7 +158,9 @@ public class HUD {
                         // when the line is ended, see if a valid command was issued...
                         cmd = currentLine.toString();
                         String[] words = cmd.split("[ \t]+");
-                        HUDActionCommand callback = knownCommands.get(words[0]);
+                        HUDActionCommand callback;
+                        if (words.length == 0){callback = null;}
+                        else {callback = knownCommands.get(words[0]);}
                         result = (callback == null) ? "?" : callback.execute(words);
                         consoleLines.add(PROMPT + cmd);
                         Collections.addAll(consoleLines, result.split("\n"));
