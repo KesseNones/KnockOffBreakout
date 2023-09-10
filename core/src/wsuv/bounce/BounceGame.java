@@ -20,7 +20,7 @@ public class BounceGame extends Game {
     public static final int RSC_EXPLOSION_FRAMES_ROWS = 8;
     public static final int RSC_EXPLOSION_FRAMES_COLS = 8;
     public static final String RSC_EXPLOSION_FRAMES = "explosion8x8.png";
-    public static final String RSC_GAMEOVER_IMG = "gameover.png";
+    public static final String RSC_GAMEOVER_IMG = "gameOverText.png";
     public static final String RSC_DEATH_IMG = "deathMessage.png";
     public static final String RSC_LEVEL_WIN_IMG = "levelVictoryMessage.png";
     public static final String RSC_GAME_VICTORY_IMG = "gameWinMessage.png";
