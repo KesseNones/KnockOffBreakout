@@ -127,6 +127,27 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        hud.registerAction("winlevel", new HUDActionCommand() {
+            static final String desc = "Explodes all remaining bricks and wins the level for the player.";
+
+            @Override
+            public String execute(String[] cmd) {
+                for (int i = 0; i < numBricks; i++){
+                    if (bricks[i].doesSpriteExist()){
+                        bricks[i].DESTROY();
+                        explosions.add(new Bang(baf, true, bricks[i].getX() + bricks[i].getOriginX(),
+                                bricks[i].getY() + bricks[i].getOriginY()));
+                        boomSfx.play();
+                    }
+                }
+                return "Conglaturation !!! Your Winner   !";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
         // HUD Data
         hud.registerView("Level:", new HUDViewCommand(HUDViewCommand.Visibility.ALWAYS) {
             @Override
@@ -217,7 +238,6 @@ public class PlayScreen extends ScreenAdapter {
 
                 if (ballHitBrick) {
                     bricks[i].collide();
-                    aliveBricks--;
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
                 }
