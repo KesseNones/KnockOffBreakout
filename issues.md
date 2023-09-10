@@ -17,9 +17,9 @@
 - **[15]** Add levels to game with scaling difficulty.
 - **[16]** Improve collision for ball and other elements.
 - **[17]** Add various cheat codes and rework terminal a little.
+- **[18]** Add splash screen.
 
 ## Open Issues ##
 
-- **[18]** Add splash screen.
 - **[19]** Add more custom sounds and assets.
 - **[20]** Add light gravity to prevent ball motion edge cases.
