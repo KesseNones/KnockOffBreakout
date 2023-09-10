@@ -100,7 +100,7 @@ public class HUD {
 
         // make a background for the console...bigger than needed!
         Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
-        pixmap.setColor(1, 1, 1, .6f);
+        pixmap.setColor(0, 0, 0, .8f);
         pixmap.fill();
         background = new Texture(pixmap);
         pixmap.dispose();
@@ -158,7 +158,9 @@ public class HUD {
                         // when the line is ended, see if a valid command was issued...
                         cmd = currentLine.toString();
                         String[] words = cmd.split("[ \t]+");
-                        HUDActionCommand callback = knownCommands.get(words[0]);
+                        HUDActionCommand callback;
+                        if (words.length == 0){callback = null;}
+                        else {callback = knownCommands.get(words[0]);}
                         result = (callback == null) ? "?" : callback.execute(words);
                         consoleLines.add(PROMPT + cmd);
                         Collections.addAll(consoleLines, result.split("\n"));
@@ -166,7 +168,7 @@ public class HUD {
                             consoleLines.removeFirst();
                         }
                         currentLine.setLength(0);
-                    } else if (character == '\b') {
+                    } else if (character == '\b' && currentLine.length() > 0) {
                         currentLine.setLength(currentLine.length() - 1);
                     } else {
                         currentLine.append(character);

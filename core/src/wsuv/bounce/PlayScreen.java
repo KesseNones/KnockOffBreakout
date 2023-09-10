@@ -24,6 +24,7 @@ public class PlayScreen extends ScreenAdapter {
     private SubState state;
     private int level;
     private float timer;
+    private boolean godModeEnabled;
 
     private Sound boomSfx;
     private Sound hitSound;
@@ -31,6 +32,7 @@ public class PlayScreen extends ScreenAdapter {
     BangAnimationFrames baf;
 
     public PlayScreen(BounceGame game) {
+        godModeEnabled = false;
         timer = 0;
         lives = 3;
         gameHasEnded = false;
@@ -86,6 +88,94 @@ public class PlayScreen extends ScreenAdapter {
 
             public String help(String[] cmd) {
                 return help;
+            }
+        });
+
+        //Cheat command that adds one life to the player's life counter,
+        // giving them more room to fail.
+        hud.registerAction("addlife", new HUDActionCommand() {
+            static final String desc = "Adds life to lives.";
+
+            @Override
+            public String execute(String[] cmd) {
+                lives++;
+                return "Life Added";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        hud.registerAction("godmode", new HUDActionCommand() {
+            static final String desc = "Makes ball hitting the bottom not kill player.";
+
+            @Override
+            public String execute(String[] cmd) {
+                String godString;
+                godModeEnabled = !godModeEnabled;
+                if (godModeEnabled){
+                    godString = "God Mode Enabled";
+                }else{
+                    godString = "God Mode Disabled";
+                }
+                return godString;
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        hud.registerAction("winlevel", new HUDActionCommand() {
+            static final String desc = "Explodes all remaining bricks \nand wins the level for the player.";
+
+            @Override
+            public String execute(String[] cmd) {
+                for (int i = 0; i < numBricks; i++){
+                    if (bricks[i].doesSpriteExist()){
+                        bricks[i].DESTROY();
+                        explosions.add(new Bang(baf, true, bricks[i].getX() + bricks[i].getOriginX(),
+                                bricks[i].getY() + bricks[i].getOriginY()));
+                        boomSfx.play();
+                    }
+                }
+                return "Conglaturation !!! Your Winner   !";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        hud.registerAction("lose", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter the losing state\n and lose a life.";
+
+            @Override
+            public String execute(String[] cmd) {
+                godModeEnabled = false;
+                ball.setCenter(400, -9999);
+                return "You lost!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        //This stops the entire game process. As a result,
+        // it may need to be removed later if deemed too dangerous.
+        hud.registerAction("exit", new HUDActionCommand() {
+            static final String desc = "Exits the game entirely.";
+
+            @Override
+            public String execute(String[] cmd) {
+                Gdx.app.exit();
+                return "Goodbye!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
             }
         });
 
@@ -151,7 +241,7 @@ public class PlayScreen extends ScreenAdapter {
         timer += delta;
 
         //Detects if ball goes below bottom of screen, indicating death.
-        if (state == SubState.PLAYING && ball.getY() < 0){
+        if (state == SubState.PLAYING && ball.getY() < 0 && !godModeEnabled){
             lives--;
             timer = 0;
             if (lives > 0){
@@ -179,7 +269,6 @@ public class PlayScreen extends ScreenAdapter {
 
                 if (ballHitBrick) {
                     bricks[i].collide();
-                    aliveBricks--;
                     explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
                     boomSfx.play();
                 }
@@ -208,11 +297,10 @@ public class PlayScreen extends ScreenAdapter {
             }
 
         }
-        if (state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
+        if (!hud.isOpen() && state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
             //If the game had ended before, the bricks are reset.
-
 
             if (gameHasEnded){
                 lives = 3;
