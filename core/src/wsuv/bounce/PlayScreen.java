@@ -31,6 +31,7 @@ public class PlayScreen extends ScreenAdapter {
     private Sound deathSound;
     private Sound gameOverSound;
     private Sound levelWinSound;
+    private Sound gameWinSound;
     private ArrayList<Bang> explosions;
     BangAnimationFrames baf;
 
@@ -61,6 +62,7 @@ public class PlayScreen extends ScreenAdapter {
         deathSound = bounceGame.am.get(BounceGame.RSC_DEATH_SOUND);
         gameOverSound = bounceGame.am.get(BounceGame.RSC_GAME_OVER_SOUND);
         levelWinSound = bounceGame.am.get(BounceGame.RSC_LEVEL_VICTORY_SOUND);
+        gameWinSound = bounceGame.am.get(BounceGame.RSC_GAME_VICTORY_SOUND);
 
         // we've loaded textures, but the explosion texture isn't quite ready to go--
         // we need to carve it up into frames.  All that work really
@@ -298,6 +300,7 @@ public class PlayScreen extends ScreenAdapter {
                 if (level > 2){
                     state = SubState.GAME_VICTORY;
                     gameHasEnded = true;
+                    gameWinSound.play();
                 }else{
                     state = SubState.LEVEL_WON;
                     wonLevel = true;
