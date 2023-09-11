@@ -28,10 +28,15 @@ public class PlayScreen extends ScreenAdapter {
 
     private Sound boomSfx;
     private Sound hitSound;
+    private Sound deathSound;
+    private Sound gameOverSound;
+    private Sound levelWinSound;
+    private Sound gameWinSound;
     private ArrayList<Bang> explosions;
     BangAnimationFrames baf;
 
     public PlayScreen(BounceGame game) {
+        game.batch.setColor(1, 1, 1, 1);
         godModeEnabled = false;
         timer = 0;
         lives = 3;
@@ -54,6 +59,10 @@ public class PlayScreen extends ScreenAdapter {
         explosions = new ArrayList<>(10);
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
         hitSound = bounceGame.am.get(BounceGame.RSC_HIT_SOUND);
+        deathSound = bounceGame.am.get(BounceGame.RSC_DEATH_SOUND);
+        gameOverSound = bounceGame.am.get(BounceGame.RSC_GAME_OVER_SOUND);
+        levelWinSound = bounceGame.am.get(BounceGame.RSC_LEVEL_VICTORY_SOUND);
+        gameWinSound = bounceGame.am.get(BounceGame.RSC_GAME_VICTORY_SOUND);
 
         // we've loaded textures, but the explosion texture isn't quite ready to go--
         // we need to carve it up into frames.  All that work really
@@ -246,9 +255,11 @@ public class PlayScreen extends ScreenAdapter {
             timer = 0;
             if (lives > 0){
                 state = SubState.DEAD;
+                deathSound.play();
             }else{
                 state = SubState.GAME_OVER;
                 gameHasEnded = true;
+                gameOverSound.play();
             }
         }
 
@@ -268,9 +279,14 @@ public class PlayScreen extends ScreenAdapter {
                 }
 
                 if (ballHitBrick) {
-                    bricks[i].collide();
-                    explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
-                    boomSfx.play();
+                    boolean stillAlive = bricks[i].collide();
+                    if (stillAlive){
+                        hitSound.play();
+                    }else{
+                        explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                        boomSfx.play();
+                    }
+
                 }
             }
 
@@ -284,9 +300,11 @@ public class PlayScreen extends ScreenAdapter {
                 if (level > 2){
                     state = SubState.GAME_VICTORY;
                     gameHasEnded = true;
+                    gameWinSound.play();
                 }else{
                     state = SubState.LEVEL_WON;
                     wonLevel = true;
+                    levelWinSound.play();
                 }
                 timer = 0;
             }

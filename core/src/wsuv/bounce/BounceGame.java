@@ -14,18 +14,19 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 
+import javax.crypto.spec.PSource;
 import java.util.Random;
 
 public class BounceGame extends Game {
     public static final int RSC_EXPLOSION_FRAMES_ROWS = 8;
     public static final int RSC_EXPLOSION_FRAMES_COLS = 8;
     public static final String RSC_EXPLOSION_FRAMES = "explosion8x8.png";
-    public static final String RSC_GAMEOVER_IMG = "gameover.png";
+    public static final String RSC_GAMEOVER_IMG = "gameOverText.png";
     public static final String RSC_DEATH_IMG = "deathMessage.png";
     public static final String RSC_LEVEL_WIN_IMG = "levelVictoryMessage.png";
     public static final String RSC_GAME_VICTORY_IMG = "gameWinMessage.png";
-    public static final String RSC_PRESSAKEY_IMG = "pressakey.png";
-    public static final String RSC_BALL_IMG = "ball.png";
+    public static final String RSC_PRESSAKEY_IMG = "keyPromptText.png";
+    public static final String RSC_BALL_IMG = "customBall.png";
     public static final String RSC_PADDLE_IMG = "paddle.png";
     public static final String RSC_DEFAULT_BRICK_IMG = "defaultBrick.png";
     public static final String RSC_ONE_HEALTH_BRICK_IMG = "oneHealth.png";
@@ -37,8 +38,12 @@ public class BounceGame extends Game {
     public static final String RSC_SPLASH_TEXT_IMG = "splashText.png";
     public static final String RSC_MONO_FONT_FILE = "JetBrainsMono-Regular.ttf";
     public static final String RSC_MONO_FONT = "JBM.ttf";
-    public static final String RSC_EXPLOSION_SFX = "explosion7s.wav";
+    public static final String RSC_EXPLOSION_SFX = "explosionSoundCustom.wav";
     public static final String RSC_HIT_SOUND = "ballHitSound.wav";
+    public static final String RSC_DEATH_SOUND = "deathAnnounce.wav";
+    public static final String RSC_GAME_OVER_SOUND = "gameOverAnnounce.wav";
+    public static final String RSC_LEVEL_VICTORY_SOUND = "levelWinAnnounce.wav";
+    public static final String RSC_GAME_VICTORY_SOUND = "gameVictoryAnnounce.wav";
 
     AssetManager am;  // AssetManager provides a single source for loaded resources
     SpriteBatch batch;
@@ -83,6 +88,10 @@ public class BounceGame extends Game {
         // Load Sounds
         am.load(RSC_EXPLOSION_SFX, Sound.class);
         am.load(RSC_HIT_SOUND, Sound.class);
+        am.load(RSC_DEATH_SOUND, Sound.class);
+        am.load(RSC_GAME_OVER_SOUND, Sound.class);
+        am.load(RSC_LEVEL_VICTORY_SOUND, Sound.class);
+        am.load(RSC_GAME_VICTORY_SOUND, Sound.class);
 
         batch = new SpriteBatch();
         setScreen(new SplashScreen(this));
