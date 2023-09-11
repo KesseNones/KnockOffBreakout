@@ -23,5 +23,4 @@
 
 - **[19]** Add more custom sounds and assets.
 - **[20]** Add light gravity to prevent ball motion edge cases.
-- **[21]** Add pause feature.
-- **[22]** Update credits and add documentation.
+- **[21]** Update credits and add documentation.
