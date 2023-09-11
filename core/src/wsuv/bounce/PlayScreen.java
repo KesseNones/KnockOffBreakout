@@ -356,15 +356,23 @@ public class PlayScreen extends ScreenAdapter {
 
         // ignore key presses when console is open and when game is over...
         if (!hud.isOpen() && state == SubState.PLAYING) {
+            //Paddle movement based on default 10 plus 1.1 to the power
+            // of level - 1 plus the log of the speed of the ball.
+            // This way, the paddle speed scales with the level and speed of the ball.
+            float boostExponent = (float)Math.log((float)Math.sqrt((ball.velocityVector.x * ball.velocityVector.x)
+                    + (ball.velocityVector.y * ball.velocityVector.y)));
+            float levelExponent = level - 1;
+            float movementVector = 10f * (float)(Math.pow(1.1f, levelExponent + boostExponent));
+            System.out.println(movementVector);
             //Moves paddle to the left until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 if (paddle.getX() > 0f){
-                    paddle.setX(paddle.getX() - 10f);
+                    paddle.setX(paddle.getX() - movementVector);
                 }
             }
             //Moves paddle to the right until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                if ((paddle.getX() + paddle.getWidth()) < Gdx.graphics.getWidth()) paddle.setX(paddle.getX() + 10f);
+                if ((paddle.getX() + paddle.getWidth()) < Gdx.graphics.getWidth()) paddle.setX(paddle.getX() + movementVector);
             }
         }
     }
