@@ -49,6 +49,9 @@ public class Ball extends Sprite {
         setX(x + time * velocityVector.x);
         setY(y + time * velocityVector.y);
 
+        //Gravitational effect.
+        if (!bounced){velocityVector.y = velocityVector.y - 0.05f;}
+
         return bounced;
     }
 
