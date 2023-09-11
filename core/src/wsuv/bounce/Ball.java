@@ -69,6 +69,9 @@ public class Ball extends Sprite {
             Vector2 collisionVector = ballCenterVec.sub(spriteCenterVec);
             float collisionAngle = collisionVector.angleRad();
             velocityVector.setAngleRad(collisionAngle);
+            //Ball velocity increases by 0.3 percent per collision.
+            velocityVector.x = velocityVector.x * 1.003f;
+            velocityVector.y = velocityVector.y * 1.003f;
 
             return true;
         }
