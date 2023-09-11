@@ -19,8 +19,8 @@
 - **[17]** Add various cheat codes and rework terminal a little.
 - **[18]** Add splash screen.
 - **[19]** Add more custom sounds and assets.
+- **[20]** Add light gravity to prevent ball motion edge cases.
 
 ## Open Issues ##
 
-- **[20]** Add light gravity to prevent ball motion edge cases.
 - **[21]** Update credits and add documentation.
