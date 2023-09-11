@@ -40,6 +40,7 @@ public class BounceGame extends Game {
     public static final String RSC_EXPLOSION_SFX = "explosionSoundCustom.wav";
     public static final String RSC_HIT_SOUND = "ballHitSound.wav";
     public static final String RSC_DEATH_SOUND = "deathAnnounce.wav";
+    public static final String RSC_GAME_OVER_SOUND = "gameOverAnnounce.wav";
 
     AssetManager am;  // AssetManager provides a single source for loaded resources
     SpriteBatch batch;
@@ -85,6 +86,7 @@ public class BounceGame extends Game {
         am.load(RSC_EXPLOSION_SFX, Sound.class);
         am.load(RSC_HIT_SOUND, Sound.class);
         am.load(RSC_DEATH_SOUND, Sound.class);
+        am.load(RSC_GAME_OVER_SOUND, Sound.class);
 
         batch = new SpriteBatch();
         setScreen(new SplashScreen(this));
