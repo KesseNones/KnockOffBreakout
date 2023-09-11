@@ -18,8 +18,10 @@
 - **[16]** Improve collision for ball and other elements.
 - **[17]** Add various cheat codes and rework terminal a little.
 - **[18]** Add splash screen.
+- **[19]** Add more custom sounds and assets.
 
 ## Open Issues ##
 
-- **[19]** Add more custom sounds and assets.
 - **[20]** Add light gravity to prevent ball motion edge cases.
+- **[21]** Add pause feature.
+- **[22]** Update credits and add documentation.
