@@ -363,7 +363,6 @@ public class PlayScreen extends ScreenAdapter {
                     + (ball.velocityVector.y * ball.velocityVector.y)));
             float levelExponent = level - 1;
             float movementVector = 10f * (float)(Math.pow(1.1f, levelExponent + boostExponent));
-            System.out.println(movementVector);
             //Moves paddle to the left until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 if (paddle.getX() > 0f){

@@ -102,7 +102,7 @@ public class BounceGame extends Game {
         music = Gdx.audio.newMusic(Gdx.files.internal("sadshark.mp3"));
         music.setLooping(true);
         music.setVolume(.5f);
-        //music.play(); //UNCOMMENT TO PLAY DEFAULT BACKGROUND MUSIC.
+        music.play();
     }
 
     @Override
