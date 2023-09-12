@@ -20,7 +20,7 @@
 - **[18]** Add splash screen.
 - **[19]** Add more custom sounds and assets.
 - **[20]** Add light gravity to prevent ball motion edge cases.
+- **[21]** Update credits and remove excess assets.
 
 ## Open Issues ##
 
-- **[21]** Update credits and add documentation.
