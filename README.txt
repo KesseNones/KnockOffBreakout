@@ -1,5 +1,5 @@
 README FOR BREAKOUT VARIATION
-Jesse A. Jones
+By: Jesse A. Jones
 
 ADDED FEATURES
 	Added a controllable paddle that moves back 
