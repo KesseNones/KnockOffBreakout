@@ -5,30 +5,41 @@ ADDED FEATURES
 	Added a controllable paddle that moves back 
 	and forth based on holding A or D key.
 
-	Added a ball that starts with a random velocity vector 
-	that bounces around and hits stuff and maybe dies.
+	The movement of the paddle is influenced by the level and ball speed
+	in the sense that the paddle moves faster based on the level and ball speed.
 
-	Added breakable bricks that the ball can hit based 
-	when it bounces into them.
+	Added a ball that starts with a random velocity vector 
+	that bounces around and hits stuff and causes the player to die
+	when it hits the ground of the game.
+
+    The game was scaled up to 800 by 800 from 800 by 600 in order
+    to have more room for game elements.
+
+	Added breakable bricks with varying amounts of health and varying models
+	based on their health. Described more later.
 
 	When the ball collides with the paddle or bricks, it gets 0.3 percent faster, 
 	making the level get harder with time.
 
+	The ball also potentially starts faster based
+	on the level the player is currently in.
+
 	Added a death mechanic caused by the ball hitting the bottom of the screen.
-	Included in this mechanic is lives. The player starts with 3 lives and 
+
+	Lives were also added. The player starts with 3 lives and
 	loses a life with a death. If the player runs out of lives, it's game over
 	and the player has to restart.
 
-	The collision system was greatly improved with quite the robust colision detection
+	The collision system was greatly improved with quite the robust collision detection
 	and response system that removes the old problems of the ball getting stuck in stuff
-	and moving at faster than light in walls occasionally. 
+	and moving at faster than light speeds in walls occasionally.
 
 	Levels were added. There's three levels. These levels affect the health of the bricks.
 
 	Bricks have a health mechanic added. Bricks can have health ranging from 1 to 6.
 	Also, for each health the brick has a specific texture associated like so:
 		1 -> dark blue
-		2 -> turqoise
+		2 -> turquoise
 		3 -> green
 		4 -> yellow
 		5 -> orange
@@ -51,13 +62,16 @@ ADDED FEATURES
 	and gets faster as the ball gets faster. This helps compensate for the gradual
 	speed increase of the ball.
 
-	Set the terminal to dark theme so it's readable and added several cheat codes to it
-	that can be explained using the ? command in the terminal. 
+	Set the terminal to dark theme so it's readable, made it bigger,
+	and added several cheat codes to it that can be explained
+	using the ? command in the terminal.
+	Some of the cheat codes include setting the level, enabling god mode,
+	instantly winning the game, adding lives, and more.
 
 	Added a variety of custom text that indicates the game state.
 	Examples include the any key press prompt, the game over message, etc.
 
-	Added a variety of custom sounds for mecahnics like the explosions, 
+	Added a variety of custom sounds for mechanics like the explosions,
 	ball bounces, and announcements that go with the game messages.
 
 	Replaced given ball with custom made ball based on plasma noise render.
@@ -66,16 +80,18 @@ ADDED FEATURES
 
 	Removed bounce counter which was replaced by the lives counter.
 
-	Added game victory when the player wins level 3 by destorying all bricks existing.
+	Added game victory when the player wins level 3 by destroying all bricks existing.
 
 	After a game over, game victory, and the start, the player is prompted for input and the game
 	starts at level 1 with fresh data.
 
 	Before the credits sequence, a splash screen fades in indicating the game name and author. 
-	Skippable by pressing ESC key.
+	Skip-able by pressing ESC key.
 
-	The ball is affected by a very light downwards gravity field, 
-	avoiding movement edge case.
+	The ball is affected by a very light downwards gravity field
+	which prevents the ball from getting stuck in a permanent side to side motion cycle.
+	For instance if the ball was heading side to side with velocity 600, 0, gravity would
+	slowly decrease the y component, bringing it down slowly to the paddle.
  
 AVOIDING BROKEN BALL MOVEMENT
 	It's easy to avoid broken ball movement. Just play the game.
@@ -85,14 +101,16 @@ AVOIDING BROKEN BALL MOVEMENT
 
 EXTERNAL RESOURCES USED
 	ballHitSound.wav came from Xtreme Pong but I made the sound affect for it
-	so it's still by me and owned by me. 
+	so it's still owned by me.
 
 	explosionSoundCustom.wav was made for Xtreme Pong originally 
 	but was made by me so it's fine.
 
-	All custom images and text were made in open source image editor Gimp.
+	All custom images and text were made
+	by me in the open source image editor Gimp.
 
-	All custom sounds were made in open source program Audacity.
+	All custom sounds were made by me
+	in the open source audio editing program Audacity.
 
 	No new external assets were added beyond the ones mentioned.
 	Certainly nothing requiring attribution.
