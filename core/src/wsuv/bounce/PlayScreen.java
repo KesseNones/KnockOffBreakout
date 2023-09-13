@@ -137,7 +137,7 @@ public class PlayScreen extends ScreenAdapter {
         });
 
         hud.registerAction("winlevel", new HUDActionCommand() {
-            static final String desc = "Explodes all remaining bricks \nand wins the level for the player.";
+            static final String desc = "Explodes all remaining bricks \n    and wins the level for the player.";
 
             @Override
             public String execute(String[] cmd) {
@@ -190,6 +190,35 @@ public class PlayScreen extends ScreenAdapter {
             public String execute(String[] cmd) {
                 Gdx.app.exit();
                 return "Goodbye!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        hud.registerAction("setlevel", new HUDActionCommand() {
+            static final String desc = "Sets the level in range 1 to 3. \n    Usage: setlevel [LEVEL_NUMBER]";
+
+            @Override
+            public String execute(String[] cmd) {
+                try {
+                    int lvl = Integer.parseInt(cmd[1]);
+                    if (lvl > 0 && lvl < 4){
+                        state = SubState.READY;
+                        gameHasEnded = false;
+                        wonLevel = true;
+                        timer = 0;
+                        level = lvl - 1;
+                        ball = new Ball(game);
+                    }else{
+                        return "Invalid level";
+                    }
+                }catch (Exception e){
+                    return desc;
+                }
+
+                return "Set level success";
             }
 
             public String help(String[] cmd){
