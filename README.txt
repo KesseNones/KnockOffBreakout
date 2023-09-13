@@ -62,10 +62,10 @@ ADDED FEATURES
 	and gets faster as the ball gets faster. This helps compensate for the gradual
 	speed increase of the ball.
 
-	Set the terminal to dark theme so it's readable, made it bigger,
+	Set the terminal to dark theme, so it's readable, made it bigger,
 	and added several cheat codes to it that can be explained
-	using the ? command in the terminal.
-	Some of the cheat codes include setting the level, enabling god mode,
+	using the "?" command in the terminal.
+	Some cheat codes include setting the level, enabling god mode,
 	instantly winning the game, adding lives, and more.
 
 	Added a variety of custom text that indicates the game state.
@@ -74,7 +74,7 @@ ADDED FEATURES
 	Added a variety of custom sounds for mechanics like the explosions,
 	ball bounces, and announcements that go with the game messages.
 
-	Replaced given ball with custom made ball based on plasma noise render.
+	Replaced given ball with custom-made ball based on plasma noise render.
 
 	Removed a lot of old unused assets. 
 
@@ -100,11 +100,11 @@ AVOIDING BROKEN BALL MOVEMENT
 	making it immune to getting stuck in a side to side loop. 
 
 EXTERNAL RESOURCES USED
-	ballHitSound.wav came from Xtreme Pong but I made the sound affect for it
+	ballHitSound.wav came from Xtreme Pong, but I made the sound effect for it,
 	so it's still owned by me.
 
 	explosionSoundCustom.wav was made for Xtreme Pong originally 
-	but was made by me so it's fine.
+	but was made by me, so it's fine.
 
 	All custom images and text were made
 	by me in the open source image editor Gimp.
