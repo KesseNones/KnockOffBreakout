@@ -201,6 +201,25 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        hud.registerAction("wingame", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter \n    " +
+                    "the game victory state and win the game";
+
+            @Override
+            public String execute(String[] cmd) {
+                timer = 0;
+                state = SubState.GAME_VICTORY;
+                gameHasEnded = true;
+                gameWinSound.play();
+
+                return "You won the game!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
         //This stops the entire game process. As a result,
         // it may need to be removed later if deemed too dangerous.
         hud.registerAction("exit", new HUDActionCommand() {
