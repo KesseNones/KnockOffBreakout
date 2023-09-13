@@ -21,7 +21,7 @@
 - **[19]** Add more custom sounds and assets.
 - **[20]** Add light gravity to prevent ball motion edge cases.
 - **[21]** Update credits and remove excess assets.
+- **[22]** Increase HUD terminal size and add more cheat codes.
 
 ## Open Issues ##
 
-- **[22]** Increase HUD terminal size and add more cheat codes.

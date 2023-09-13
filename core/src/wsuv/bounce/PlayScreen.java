@@ -137,7 +137,7 @@ public class PlayScreen extends ScreenAdapter {
         });
 
         hud.registerAction("winlevel", new HUDActionCommand() {
-            static final String desc = "Explodes all remaining bricks \nand wins the level for the player.";
+            static final String desc = "Explodes all remaining bricks \n    and wins the level for the player.";
 
             @Override
             public String execute(String[] cmd) {
@@ -157,14 +157,62 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
-        hud.registerAction("lose", new HUDActionCommand() {
-            static final String desc = "Causes the player to instantly enter the losing state\n and lose a life.";
+        hud.registerAction("die", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter \n    " +
+                    "the losing state and lose a life \n    and game over if no lives are left.";
 
             @Override
             public String execute(String[] cmd) {
-                godModeEnabled = false;
-                ball.setCenter(400, -9999);
-                return "You lost!";
+                lives--;
+                timer = 0;
+                if (lives > 0){
+                    state = SubState.DEAD;
+                    deathSound.play();
+                }else{
+                    state = SubState.GAME_OVER;
+                    gameHasEnded = true;
+                    gameOverSound.play();
+                }
+                return "You died!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        hud.registerAction("losegame", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter \n    " +
+                    "the game over state and lose the game";
+
+            @Override
+            public String execute(String[] cmd) {
+                timer = 0;
+                lives = 0;
+                state = SubState.GAME_OVER;
+                gameHasEnded = true;
+                gameOverSound.play();
+
+                return "You lost the game!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        hud.registerAction("wingame", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter \n    " +
+                    "the game victory state and win the game";
+
+            @Override
+            public String execute(String[] cmd) {
+                timer = 0;
+                state = SubState.GAME_VICTORY;
+                gameHasEnded = true;
+                gameWinSound.play();
+
+                return "You won the game!";
             }
 
             public String help(String[] cmd){
@@ -181,6 +229,35 @@ public class PlayScreen extends ScreenAdapter {
             public String execute(String[] cmd) {
                 Gdx.app.exit();
                 return "Goodbye!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
+        hud.registerAction("setlevel", new HUDActionCommand() {
+            static final String desc = "Sets the level in range 1 to 3. \n    Usage: setlevel <LEVEL_NUMBER>";
+
+            @Override
+            public String execute(String[] cmd) {
+                try {
+                    int lvl = Integer.parseInt(cmd[1]);
+                    if (lvl > 0 && lvl < 4){
+                        state = SubState.READY;
+                        gameHasEnded = false;
+                        wonLevel = true;
+                        timer = 0;
+                        level = lvl - 1;
+                        ball = new Ball(game);
+                    }else{
+                        return "Invalid level";
+                    }
+                }catch (Exception e){
+                    return desc;
+                }
+
+                return "Set level success";
             }
 
             public String help(String[] cmd){
@@ -250,7 +327,7 @@ public class PlayScreen extends ScreenAdapter {
         timer += delta;
 
         //Detects if ball goes below bottom of screen, indicating death.
-        if (state == SubState.PLAYING && ball.getY() < 0 && !godModeEnabled){
+        if (!hud.isOpen() && state == SubState.PLAYING && ball.getY() < 0 && !godModeEnabled){
             lives--;
             timer = 0;
             if (lives > 0){
@@ -264,7 +341,7 @@ public class PlayScreen extends ScreenAdapter {
         }
 
         // always update the ball, but ignore bounces unless we're in PLAY state
-        if (state == SubState.PLAYING) {
+        if (!hud.isOpen() && state == SubState.PLAYING) {
             boolean ballCollidedWithWall = ball.update();
             boolean ballHitPaddle = ball.collidedWithObject(paddle);
 
@@ -348,7 +425,7 @@ public class PlayScreen extends ScreenAdapter {
                     (float) (Math.pow( (1.2f) , ((float) level -  1) )) + 200f;
         }
 
-        if (state != SubState.PLAYING && timer > 5f){
+        if (!hud.isOpen() && state != SubState.PLAYING && timer > 5f){
             ball = new Ball(bounceGame);
             paddle = new Paddle(bounceGame);
             state = SubState.READY;

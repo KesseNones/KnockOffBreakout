@@ -73,7 +73,7 @@ public class HUD {
      * Make a HUD with sane defaults.
      */
     public HUD(BitmapFont fnt) {
-        this(10, 13, 10, 500, fnt);
+        this(20, 13, 10, 500, fnt);
     }
 
     /**
