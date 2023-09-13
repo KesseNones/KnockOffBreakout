@@ -250,7 +250,7 @@ public class PlayScreen extends ScreenAdapter {
         timer += delta;
 
         //Detects if ball goes below bottom of screen, indicating death.
-        if (state == SubState.PLAYING && ball.getY() < 0 && !godModeEnabled){
+        if (!hud.isOpen() && state == SubState.PLAYING && ball.getY() < 0 && !godModeEnabled){
             lives--;
             timer = 0;
             if (lives > 0){
@@ -264,7 +264,7 @@ public class PlayScreen extends ScreenAdapter {
         }
 
         // always update the ball, but ignore bounces unless we're in PLAY state
-        if (state == SubState.PLAYING) {
+        if (!hud.isOpen() && state == SubState.PLAYING) {
             boolean ballCollidedWithWall = ball.update();
             boolean ballHitPaddle = ball.collidedWithObject(paddle);
 
@@ -348,7 +348,7 @@ public class PlayScreen extends ScreenAdapter {
                     (float) (Math.pow( (1.2f) , ((float) level -  1) )) + 200f;
         }
 
-        if (state != SubState.PLAYING && timer > 5f){
+        if (!hud.isOpen() && state != SubState.PLAYING && timer > 5f){
             ball = new Ball(bounceGame);
             paddle = new Paddle(bounceGame);
             state = SubState.READY;
