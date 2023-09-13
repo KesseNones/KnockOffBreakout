@@ -181,6 +181,26 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        hud.registerAction("losegame", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter \n    " +
+                    "the game over state and lose the game";
+
+            @Override
+            public String execute(String[] cmd) {
+                timer = 0;
+                lives = 0;
+                state = SubState.GAME_OVER;
+                gameHasEnded = true;
+                gameOverSound.play();
+
+                return "You lost the game!";
+            }
+
+            public String help(String[] cmd){
+                return desc;
+            }
+        });
+
         //This stops the entire game process. As a result,
         // it may need to be removed later if deemed too dangerous.
         hud.registerAction("exit", new HUDActionCommand() {
@@ -198,7 +218,7 @@ public class PlayScreen extends ScreenAdapter {
         });
 
         hud.registerAction("setlevel", new HUDActionCommand() {
-            static final String desc = "Sets the level in range 1 to 3. \n    Usage: setlevel [LEVEL_NUMBER]";
+            static final String desc = "Sets the level in range 1 to 3. \n    Usage: setlevel <LEVEL_NUMBER>";
 
             @Override
             public String execute(String[] cmd) {
