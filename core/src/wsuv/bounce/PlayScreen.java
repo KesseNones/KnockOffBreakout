@@ -157,14 +157,23 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
-        hud.registerAction("lose", new HUDActionCommand() {
-            static final String desc = "Causes the player to instantly enter the losing state\n and lose a life.";
+        hud.registerAction("die", new HUDActionCommand() {
+            static final String desc = "Causes the player to instantly enter \n    " +
+                    "the losing state and lose a life \n    and game over if no lives are left.";
 
             @Override
             public String execute(String[] cmd) {
-                godModeEnabled = false;
-                ball.setCenter(400, -9999);
-                return "You lost!";
+                lives--;
+                timer = 0;
+                if (lives > 0){
+                    state = SubState.DEAD;
+                    deathSound.play();
+                }else{
+                    state = SubState.GAME_OVER;
+                    gameHasEnded = true;
+                    gameOverSound.play();
+                }
+                return "You died!";
             }
 
             public String help(String[] cmd){
