@@ -24,3 +24,4 @@
 
 ## Open Issues ##
 
+- **[22]** Increase HUD terminal size and add more cheat codes.
