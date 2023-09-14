@@ -4,21 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-
+//This class holds the data and represents a brick in the game.
 public class Brick extends Sprite {
     private boolean spriteExists;
     private int health;
 
+    //Used to make a new brick.
     public Brick(BounceGame game, int initialHealth, float row, float col) {
+        //Establishes brick's texture and existence.
         super(game.am.get("defaultBrick.png", Texture.class));
         setTexture(findTextureBasedOnHealth(initialHealth));
         spriteExists = true;
+
         //Sets up health of brick based on input.
         if (initialHealth < 1){
             health = 1;
         }else{
             health = initialHealth;
         }
+
+        //Establishes X and Y coordinates of brick based on input row and column.
         setX(Gdx.graphics.getWidth() / (10f) * col);
         boolean rowGreaterThanThree = row > 2;
         float add;
@@ -29,6 +34,7 @@ public class Brick extends Sprite {
     //Takes in health and returns a new texture object based on the input health.
     private Texture findTextureBasedOnHealth(int health){
         String textureName;
+        //Finds appropriate texture string based on health.
         switch (health){
             case 1:
                 textureName = "oneHealth.png";
@@ -55,6 +61,8 @@ public class Brick extends Sprite {
         return new Texture(textureName);
     }
 
+    //Destroys brick by making it, so it won't
+    // be rendered when render in PlayScreen is called.
     public void DESTROY(){
         health = 0;
         spriteExists = false;
@@ -75,8 +83,10 @@ public class Brick extends Sprite {
         spriteExists = true;
     }
 
+    //Returns health number.
     public int getHealth(){return health;}
 
+    //Used to tell if brick exists.
     public boolean doesSpriteExist(){
         return spriteExists;
     }
