@@ -65,8 +65,23 @@ ADDED FEATURES
 	Set the terminal to dark theme, so it's readable, made it bigger,
 	and added several cheat codes to it that can be explained
 	using the "?" command in the terminal.
-	Some cheat codes include setting the level, enabling god mode,
-	instantly winning the game, adding lives, and more.
+	The added codes are:
+        die -> Instantly kills player and causes them to lose a life.
+        exit -> Exits the game completely.
+        setlevel -> Takes in a level number and if it's a valid
+            number in range 1 to 3, it sets the level to that number.
+        winlevel -> Causes every brick in the level to explode,
+            winning the level for the player.
+        losegame -> Causes the player to instantly lose the game,
+            entering the game over state causing the player to
+            need to restart.
+        addlife -> Adds a life to the lives counter.
+        wingame -> The opposite of losegame: causes the player
+            to instantly win the game, causing them to need to
+            restart afterwards.
+        godmode -> Makes it so the ball hitting the bottom of the
+            screen doesn't trigger a death state, making the player
+            immortal.
 
 	Added a variety of custom text that indicates the game state.
 	Examples include the any key press prompt, the game over message, etc.
