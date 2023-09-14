@@ -22,7 +22,7 @@
 - **[20]** Add light gravity to prevent ball motion edge cases.
 - **[21]** Update credits and remove excess assets.
 - **[22]** Increase HUD terminal size and add more cheat codes.
+- **[23]** Fix minor paddle movement bounds case, touch up README, and add comments.
 
 ## Open Issues ##
 
-- **[23]** Fix minor paddle movement bounds case and touch up README
