@@ -25,3 +25,4 @@
 
 ## Open Issues ##
 
+- **[23]** Fix minor paddle movement bounds case and touch up README
