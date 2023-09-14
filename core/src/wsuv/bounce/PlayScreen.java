@@ -442,13 +442,26 @@ public class PlayScreen extends ScreenAdapter {
             float movementVector = 10f * (float)(Math.pow(1.1f, levelExponent + boostExponent));
             //Moves paddle to the left until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                if (paddle.getX() > 0f){
+                //Puts paddle at left edge preventing it from going over
+                // a little regardless of its interval of movement.
+                if (paddle.getX() - movementVector < 0f){
+                    paddle.setX(0f);
+                }else{
                     paddle.setX(paddle.getX() - movementVector);
                 }
             }
             //Moves paddle to the right until collision.
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                if ((paddle.getX() + paddle.getWidth()) < Gdx.graphics.getWidth()) paddle.setX(paddle.getX() + movementVector);
+                float screenWidth = Gdx.graphics.getWidth();
+                float rightEdge = paddle.getX() + paddle.getWidth();
+
+                //If paddle is too far right it's set to be at the right edge of the screen.
+                // Otherwise, just moves it to the right by movement vector.
+                if ((rightEdge + movementVector) > screenWidth){
+                    paddle.setX(screenWidth - paddle.getWidth());
+                }else{
+                    paddle.setX(paddle.getX() + movementVector);
+                }
             }
         }
     }
