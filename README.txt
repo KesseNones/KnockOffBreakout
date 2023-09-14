@@ -1,7 +1,7 @@
-README FOR BREAKOUT VARIATION
+README for Breakout Variation:
 By: Jesse A. Jones
 
-ADDED FEATURES
+Added Features:
 	Added a controllable paddle that moves back 
 	and forth based on holding A or D key.
 
@@ -83,6 +83,10 @@ ADDED FEATURES
             screen doesn't trigger a death state, making the player
             immortal.
 
+    On the topic of the HUD terminal, the edge case was fixed where if the player
+    typed backspace enough the game would crash.
+    There was also an empty line edge case that was fixed.
+
 	Added a variety of custom text that indicates the game state.
 	Examples include the any key press prompt, the game over message, etc.
 
@@ -108,13 +112,13 @@ ADDED FEATURES
 	For instance if the ball was heading side to side with velocity 600, 0, gravity would
 	slowly decrease the y component, bringing it down slowly to the paddle.
  
-AVOIDING BROKEN BALL MOVEMENT
+Avoiding Broken Ball Movement:
 	It's easy to avoid broken ball movement. Just play the game.
 	If the ball gets caught in a side to side motion, 
 	the gravitational field acting on it pulls it down slowly, 
 	making it immune to getting stuck in a side to side loop. 
 
-EXTERNAL RESOURCES USED
+External Resources Used:
 	ballHitSound.wav came from Xtreme Pong, but I made the sound effect for it,
 	so it's still owned by me.
 
