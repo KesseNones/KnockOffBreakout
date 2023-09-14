@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+//Used to run the whole game.
 public class PlayScreen extends ScreenAdapter {
     private enum SubState {READY, DEAD, GAME_OVER, PLAYING, LEVEL_WON, GAME_VICTORY}
     private boolean gameHasEnded;
@@ -35,6 +36,7 @@ public class PlayScreen extends ScreenAdapter {
     private ArrayList<Bang> explosions;
     BangAnimationFrames baf;
 
+    //Starts new game.
     public PlayScreen(BounceGame game) {
         game.batch.setColor(1, 1, 1, 1);
         godModeEnabled = false;
@@ -57,6 +59,8 @@ public class PlayScreen extends ScreenAdapter {
         }
 
         explosions = new ArrayList<>(10);
+
+        //Loads up all necessary sound effects.
         boomSfx = bounceGame.am.get(BounceGame.RSC_EXPLOSION_SFX);
         hitSound = bounceGame.am.get(BounceGame.RSC_HIT_SOUND);
         deathSound = bounceGame.am.get(BounceGame.RSC_DEATH_SOUND);
@@ -116,6 +120,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        //Makes the player immune to death
         hud.registerAction("godmode", new HUDActionCommand() {
             static final String desc = "Makes ball hitting the bottom not kill player.";
 
@@ -136,6 +141,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        //Causes the player to win level by destroying all bricks.
         hud.registerAction("winlevel", new HUDActionCommand() {
             static final String desc = "Explodes all remaining bricks \n    and wins the level for the player.";
 
@@ -157,6 +163,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        //Kills player causing life loss/game over.
         hud.registerAction("die", new HUDActionCommand() {
             static final String desc = "Causes the player to instantly enter \n    " +
                     "the losing state and lose a life \n    and game over if no lives are left.";
@@ -181,6 +188,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        //Causes player to instantly lose game.
         hud.registerAction("losegame", new HUDActionCommand() {
             static final String desc = "Causes the player to instantly enter \n    " +
                     "the game over state and lose the game";
@@ -201,6 +209,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        //Causes player to instantly win game.
         hud.registerAction("wingame", new HUDActionCommand() {
             static final String desc = "Causes the player to instantly enter \n    " +
                     "the game victory state and win the game";
@@ -236,6 +245,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
+        //Sets level to input level if valid number in range 1 to 3.
         hud.registerAction("setlevel", new HUDActionCommand() {
             static final String desc = "Sets the level in range 1 to 3. \n    Usage: setlevel <LEVEL_NUMBER>";
 
@@ -310,6 +320,7 @@ public class PlayScreen extends ScreenAdapter {
 
     }
 
+    //Useful game status info.
     @Override
     public void show() {
         Gdx.app.log("PlayScreen", "show");
@@ -317,12 +328,14 @@ public class PlayScreen extends ScreenAdapter {
         level = 1;
     }
 
-    //Calculates the health of a given brick based on the current index in bricks and the current level.
+    //Calculates the health of a given brick based
+    // on the current index in bricks and the current level.
     public int brickHealthMethod(int index, int lvl){
         int divFactor = 30 - (10 * (lvl - 1));
         return 1 + (index / divFactor);
     }
 
+    //Updates the game based on state info and time delta.
     public void update(float delta) {
         timer += delta;
 
@@ -340,7 +353,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         }
 
-        // always update the ball, but ignore bounces unless we're in PLAY state
+        //Ball updates if HUD is closed and game is in PLAYING state.
         if (!hud.isOpen() && state == SubState.PLAYING) {
             boolean ballCollidedWithWall = ball.update();
             boolean ballHitPaddle = ball.collidedWithObject(paddle);
@@ -348,6 +361,7 @@ public class PlayScreen extends ScreenAdapter {
             //Determines if ball has collided with any bricks.
             for (int i = 0; i < numBricks; i++){
                 boolean ballHitBrick;
+
                 //If a brick exists that could be hit, check to see if the ball actually hit it.
                 if (bricks[i].doesSpriteExist()){
                     ballHitBrick = ball.collidedWithObject(bricks[i]);
@@ -355,24 +369,28 @@ public class PlayScreen extends ScreenAdapter {
                     ballHitBrick = false;
                 }
 
+                //If the ball hit a brick, check if it's still alive and spawn explosion if not.
                 if (ballHitBrick) {
                     boolean stillAlive = bricks[i].collide();
                     if (stillAlive){
                         hitSound.play();
                     }else{
-                        explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(), ball.getY() + ball.getOriginY()));
+                        explosions.add(new Bang(baf, true, ball.getX() + ball.getOriginX(),
+                                ball.getY() + ball.getOriginY()));
                         boomSfx.play();
                     }
 
                 }
             }
 
+            //Updates number of bricks that still exist.
             int brickCount = 0;
             for (int i = 0; i < numBricks ; i++){
                 if (bricks[i].doesSpriteExist()){brickCount++;}
             }
             aliveBricks = brickCount;
 
+            //If no bricks left, level or game win has occurred.
             if (aliveBricks < 1){
                 if (level > 2){
                     state = SubState.GAME_VICTORY;
@@ -392,21 +410,27 @@ public class PlayScreen extends ScreenAdapter {
             }
 
         }
+
+        //Moves forward based on if player pressed a key in the READY state.
         if (!hud.isOpen() && state == SubState.READY && Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
             state = SubState.PLAYING;
             bounceGame.music.setVolume(bounceGame.music.getVolume() / 2);
-            //If the game had ended before, the bricks are reset.
 
+            //If the game had ended before, the bricks are reset.
             if (gameHasEnded){
                 lives = 3;
                 level = 1;
                 gameHasEnded = false;
+                //Resets paddle.
                 paddle = new Paddle(bounceGame);
+                //Resets bricks.
                 for (int i = 0; i < numBricks; i++){
                     bricks[i].resurrect(brickHealthMethod(i, level));
                 }
                 aliveBricks = numBricks;
             }
+
+            //Updates level and resets bricks if level is won.
             if (wonLevel){
                 level++;
                 wonLevel = false;
@@ -425,6 +449,7 @@ public class PlayScreen extends ScreenAdapter {
                     (float) (Math.pow( (1.2f) , ((float) level -  1) )) + 200f;
         }
 
+        //Creates new paddle and ball if in transition state.
         if (!hud.isOpen() && state != SubState.PLAYING && timer > 5f){
             ball = new Ball(bounceGame);
             paddle = new Paddle(bounceGame);
@@ -466,10 +491,12 @@ public class PlayScreen extends ScreenAdapter {
         }
     }
 
+    //Renders needed assets of game.
     @Override
     public void render(float delta) {
         update(delta);
 
+        //Clears screen and renders any needed explosions.
         ScreenUtils.clear(0, 0, 0, 1);
         bounceGame.batch.begin();
         for(Iterator<Bang> bi = explosions.iterator(); bi.hasNext(); ) {
@@ -477,6 +504,8 @@ public class PlayScreen extends ScreenAdapter {
             if (b.completed()) { bi.remove(); }
             else { b.draw(bounceGame.batch); }
         }
+
+        //Renders ball and paddle.
         ball.draw(bounceGame.batch);
         paddle.draw(bounceGame.batch);
 
@@ -486,7 +515,8 @@ public class PlayScreen extends ScreenAdapter {
                 bricks[i].draw(bounceGame.batch);
             }
         }
-        // this logic could also be pushed into a method on SubState enum
+
+        //Displays necessary text based on state.
         switch (state) {
             case DEAD:
                 bounceGame.batch.draw(bounceGame.am.get(BounceGame.RSC_DEATH_IMG, Texture.class), 200, 200);
@@ -506,6 +536,8 @@ public class PlayScreen extends ScreenAdapter {
             case PLAYING:
                 break;
         }
+
+        //Draws sprites and ends batch.
         hud.draw(bounceGame.batch);
         bounceGame.batch.end();
     }
