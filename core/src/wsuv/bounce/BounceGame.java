@@ -17,7 +17,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import javax.crypto.spec.PSource;
 import java.util.Random;
 
+//This class is used to set up game assets and get the game going.
 public class BounceGame extends Game {
+    //Loads a monstrous amount of assets.
     public static final int RSC_EXPLOSION_FRAMES_ROWS = 8;
     public static final int RSC_EXPLOSION_FRAMES_COLS = 8;
     public static final String RSC_EXPLOSION_FRAMES = "explosion8x8.png";
@@ -51,6 +53,8 @@ public class BounceGame extends Game {
     Random random = new Random();
 
     Music music;
+
+    //Used to create a new game.
     @Override
     public void create() {
         am = new AssetManager();
@@ -93,6 +97,7 @@ public class BounceGame extends Game {
         am.load(RSC_LEVEL_VICTORY_SOUND, Sound.class);
         am.load(RSC_GAME_VICTORY_SOUND, Sound.class);
 
+        //Load up sprite batch and start game at splash screen.
         batch = new SpriteBatch();
         setScreen(new SplashScreen(this));
 
@@ -105,6 +110,7 @@ public class BounceGame extends Game {
         music.play();
     }
 
+    //Gets rid of game when done.
     @Override
     public void dispose() {
         batch.dispose();
